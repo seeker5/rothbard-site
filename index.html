@@ -160,7 +160,7 @@ class Component extends DCLogic {
         : { mark: '#000000', body: '#111111', accent: '#000000', rule: '#D4D4D4', muted: '#6B6B6B' },
       isAbout: p === 'about', isLineage: p === 'lineage', notLineage: p !== 'lineage', isContact: p === 'contact', isPortfolio: p === 'portfolio',
       pageLabel: L[p] || 'Cover',
-      navFlat: ['about', 'portfolio', 'lineage', 'writing'].map(k => ({ label: L[k], go: this.go(k), barStyle: { color: p === k ? '#000000' : '#111111', fontFamily: "'Newsreader',serif", fontSize: 'clamp(10.5px, 2.9vw, 13px)', letterSpacing: 'clamp(1.5px, 0.8vw, 4.2px)', textTransform: 'uppercase', padding: '10px 0', borderBottom: p === k ? '1px solid #000000' : '1px solid transparent' } })),
+      navFlat: ['about', 'portfolio', 'lineage'].map(k => ({ label: L[k], go: this.go(k), barStyle: { color: p === k ? '#000000' : '#111111', fontFamily: "'Newsreader',serif", fontSize: 'clamp(10.5px, 2.9vw, 13px)', letterSpacing: 'clamp(1.5px, 0.8vw, 4.2px)', textTransform: 'uppercase', padding: '10px 0', borderBottom: p === k ? '1px solid #000000' : '1px solid transparent' } })),
       navCols, sectors, goCover: this.go('cover'),
       subscribed: this.state.subscribed, notSubscribed: !this.state.subscribed,
       subscribe: (e) => { e.preventDefault(); this.setState({ subscribed: true }); }
