@@ -133,7 +133,7 @@ const P = {
     why:'Wrote Capital and Its Structure and carried subjectivism into expectations. Attended Mises’s seminar, then studied under Hayek at the LSE. Later co-led NYU’s Austrian program with Kirzner.'},
   machlup:{name:'Fritz Machlup',dates:'1902–1983',title:'Economist of knowledge',
     why:'A regular in Mises’s Vienna seminar. Pioneered the economics of information and measured the “knowledge industry.” Taught at NYU from 1971 to 1983.'},
-  sennholz:{dash:1,img:'https://www.mackinac.org/media/images/2007/sennholzhans.jpg',name:'Hans Sennholz',dates:'1922–2007',title:'Mises’s first American PhD',wiki:'Hans_Sennholz',main:1,kids:1,
+  sennholz:{dash:1,img:'./assets/sennholz.jpg',name:'Hans Sennholz',dates:'1922–2007',title:'Mises’s first American PhD',wiki:'Hans_Sennholz',main:1,kids:1,
     why:'Studied under Mises at NYU, then built Grove City College’s economics department into an Austrian stronghold and later led the Foundation for Economic Education. Taught Howard Winklevoss at Grove City. Herbener later succeeded him as department chair; the dashed line marks that succession.'},
   rothbard:{name:'Murray Rothbard',dates:'1926–1995',title:'Mr. Libertarian',wiki:'Murray_Rothbard',kids:1,
     why:'Wrote Man, Economy, and State and For a New Liberty. Fused Austrian economics with natural rights to found modern anarcho-capitalism. Co-founded the Cato Institute and helped found the Mises Institute. Attended Mises’s NYU seminar for years; Hoppe came to America to work with him.'},
@@ -237,7 +237,7 @@ class Component extends DCLogic {
       portrait: portraitPx+'px',
       nameSize: (mobile ? (rowH >= 56 ? 12 : 11) : treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
       sel: { ...s, hasNote:!!s.note, img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
-        genLabel:'Generation '+genOf[sel] + (s.main && sel!=='walter'?' · Direct line':'') }
+        genLabel:'Generation '+genOf[sel] }
     };
   }
 }
