@@ -237,7 +237,7 @@ class Component extends DCLogic {
       portrait: portraitPx+'px',
       nameSize: (mobile ? (rowH >= 56 ? 12 : 11) : treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
       sel: { ...s, hasNote:!!s.note, img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
-        genLabel:'Generation '+genOf[sel] + (s.main?' · Direct line':'') }
+        genLabel:'Generation '+genOf[sel] + (s.main && sel!=='walter'?' · Direct line':'') }
     };
   }
 }
