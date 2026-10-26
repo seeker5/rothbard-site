@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=Poiret+One&amp;family=Figtree:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+html,body{margin:0;background:#F3F2EE;}
+a{color:#000000;text-decoration:none;}
+a:hover{color:#555555;}
+</style>
+</helmet>
+<div style="height:calc(100vh - 70px); overflow:hidden; box-sizing:border-box; max-width:1120px; margin:0 auto; padding:clamp(24px,6vh,56px) 40px clamp(16px,2.6vh,32px); background:#F3F2EE; color:#111111; font-family:'Newsreader', Georgia, serif; display:flex; flex-direction:column; gap:clamp(10px,1.6vh,18px);">
+  <header style="flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; border-bottom:1px solid #D4D4D4; padding-bottom:clamp(8px,1.2vh,14px);">
+    <a href="#" onClick="{{ onHome }}" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#000000; text-decoration:none; cursor:pointer; text-align:center;">
+        <span style="font-family:'Poiret One',serif; font-weight:400; font-size:clamp(36px, 4vw, 56px); line-height:1; letter-spacing:0.05em;">Rothbard</span>
+      </a>
+
+    <p style="margin:0 auto; max-width:760px; text-align:center; font-family:'Newsreader',serif; font-size:clamp(17px,2.2vh,21px); line-height:1.45; color:#111111; text-wrap:pretty;">Rothbard Capital takes its name from Murray Rothbard, one of the godfathers of the Austrian school of Economics. Like those before and after him, Rothbard had a decisive appreciation of entrepreneurs as risk bearers and innovators for society.</p>
+  </header>
+
+  <div style="flex:1; min-height:0; display:flex; gap:clamp(16px,2vw,32px);">
+
+
+    <div data-tree="1" style="flex:1; min-width:0; min-height:0; overflow-y:auto; display:flex; flex-direction:column; padding-bottom:30vh;">
+      <sc-for list="{{ gens }}" as="gen" hint-placeholder-count="6">
+        <div style="height:138px; flex-shrink:0; display:flex;">
+          <div style="width:44px; flex-shrink:0; white-space:nowrap; font-family:'Poiret One',serif; font-size:15px; color:#6B6B6B; padding-top:6px;">{{ gen.label }}</div>
+          <div style="flex:1; position:relative;">
+            <sc-for list="{{ gen.people }}" as="p" hint-placeholder-count="2">
+              <div data-person="{{ p.key }}" onMouseEnter="{{ p.select }}" onClick="{{ p.select }}" style="position:absolute; left:{{ p.left }}; top:0; bottom:0; width:15%; max-width:180px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer;">
+                <div style="width:{{ portrait }}; height:{{ portrait }}; flex-shrink:0; border-radius:50%; overflow:hidden; border:{{ p.border }}; box-shadow:{{ p.shadow }}; background:#E4E2DC; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-size:14px; color:#6B6B6B;">
+                  <sc-if value="{{ p.hasImg }}" hint-placeholder-val="{{ false }}">
+                    <div role="img" aria-label="{{ p.name }}" style="width:100%; height:100%; background-image:{{ p.bg }}; background-size:cover; background-position:50% 20%;"></div>
+                  </sc-if>
+                  <sc-if value="{{ p.noImg }}" hint-placeholder-val="{{ true }}">
+                    <span>{{ p.initials }}</span>
+                  </sc-if>
+                </div>
+                <div style="margin-top:3px; font-family:'Newsreader',serif; font-size:{{ nameSize }}; font-weight:{{ p.weight }}; line-height:1.1; white-space:nowrap; color:{{ p.nameColor }};">{{ p.label }}</div>
+                <sc-if value="{{ datesOn }}" hint-placeholder-val="{{ true }}"><div style="font-family:'Figtree',sans-serif; font-size:11px; color:#6B6B6B; line-height:1.3; white-space:nowrap;">{{ p.dates }}</div></sc-if>
+                <sc-if value="{{ titlesOn }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-family:'Newsreader',serif; font-size:12px; font-style:italic; line-height:1.15; color:#333333; text-wrap:balance; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ p.title }}</div>
+                </sc-if>
+                <div style="flex:1; width:{{ p.stemW }}; background:{{ p.stemColor }}; margin-top:2px;"></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <sc-if value="{{ gen.hasConn }}" hint-placeholder-val="{{ true }}">
+          <svg viewBox="0 0 1000 16" preserveAspectRatio="none" style="display:block; width:calc(100% - 44px); margin-left:44px; height:16px; flex-shrink:0; overflow:visible;">
+            <path d="{{ gen.conn }}" fill="none" stroke="#9A9A9A" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+            <path d="M500 0 V16" fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="{{ gen.mainDash }}" vector-effect="non-scaling-stroke"></path>
+          </svg>
+        </sc-if>
+      </sc-for>
+    </div>
+    <aside style="width:clamp(240px,24vw,320px); flex-shrink:0; border-left:1px solid #D4D4D4; padding-left:clamp(16px,2vw,28px); display:flex; flex-direction:column; gap:14px; overflow-y:auto; min-height:0;">
+      
+      <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-start;">
+        <div style="width:112px; height:140px; flex-shrink:0; overflow:hidden; background:#E4E2DC;">
+          <image-slot id="{{ sel.detailId }}" shape="rect" src="{{ sel.img }}" placeholder="{{ sel.placeholder }}" style="width:100%; height:100%; display:block;"></image-slot>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
+          <span style="font-family:'Figtree',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">{{ sel.genLabel }}</span>
+          <span style="font-family:'Newsreader',serif; font-style:italic; font-size:22px; line-height:1.05; color:#000000;">{{ sel.name }}</span>
+          <span style="font-family:'Figtree',sans-serif; font-size:12px; color:#6B6B6B;">{{ sel.dates }}</span>
+          <span style="font-family:'Newsreader',serif; font-size:14px; color:#111111;">{{ sel.title }}</span>
+        </div>
+      </div>
+      <p style="margin:0; font-family:'Figtree',sans-serif; font-size:clamp(13px,1.6vh,14px); line-height:1.5; color:#111111; text-wrap:pretty;">{{ sel.why }}</p>
+      <span style="margin-top:auto; font-family:'Figtree',sans-serif; font-size:11px; color:#6B6B6B; line-height:1.4;">Hover or tap any name. Relationships after <a href="https://mises.co/lineages" target="_blank" style="text-decoration:underline; text-underline-offset:2px;">mises.co/lineages</a>; portraits via Wikimedia.</span>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showTitles&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const P = {
+  menger:{name:'Carl Menger',dates:'1840–1921',title:'Father of the Austrian School',wiki:'Carl_Menger',main:1,kids:1,
+    why:'Wrote Principles of Economics (1871), founding the Austrian School and launching the marginal revolution. Led the Austrian side of the Methodenstreit against the German Historical School. His Principles won over Böhm-Bawerk and Wieser, his first disciples.'},
+  wieser:{name:'Friedrich von Wieser',dates:'1851–1926',title:'Coined “marginal utility”',wiki:'Friedrich_von_Wieser',
+    why:'Coined the term “marginal utility” and the concept of opportunity cost. Served as Austria’s minister of commerce and supervised Hayek’s doctorate. Student of Menger’s Principles, brother-in-law of Böhm-Bawerk, and Hayek’s doctoral supervisor.'},
+  bb:{name:'Eugen von Böhm-Bawerk',dates:'1851–1914',title:'Theorist of capital and interest',wiki:'Eugen_von_Böhm-Bawerk',main:1,kids:1,
+    why:'Wrote Capital and Interest, explaining interest through time preference. Took apart Marx’s labor theory of value in Karl Marx and the Close of His System. Served three times as Austria’s finance minister. A disciple of Menger and Wieser’s brother-in-law. His Vienna seminar trained Mises and Schumpeter.'},
+  mises:{name:'Ludwig von Mises',dates:'1881–1973',title:'Dean of the Austrian School',wiki:'Ludwig_von_Mises',main:1,kids:1,
+    why:'Wrote Human Action, the Austrian School’s master treatise. Showed in 1920, in Economic Calculation in the Socialist Commonwealth, that socialism cannot calculate without market prices. His Theory of Money and Credit founded Austrian business-cycle theory. Trained in Böhm-Bawerk’s seminar. His Vienna private seminar formed Hayek and Morgenstern; at NYU he taught Sennholz, Rothbard and Kirzner.'},
+  schumpeter:{name:'Joseph Schumpeter',dates:'1883–1950',title:'Prophet of creative destruction',wiki:'Joseph_Schumpeter',
+    why:'Coined “creative destruction” in Capitalism, Socialism and Democracy. Put the innovating entrepreneur at the center of economic change. Sat in Böhm-Bawerk’s seminar alongside the young Mises.'},
+  hayek:{name:'Friedrich A. Hayek',dates:'1899–1992',title:'Beat the communists',wiki:'Friedrich_Hayek',kids:1,
+    why:'Won the Nobel Prize in Economics in 1974. Wrote The Road to Serfdom. Showed that prices carry knowledge no planner can gather, and founded the Mont Pèlerin Society. Doctorate under Wieser, then a member of Mises’s private seminar. Lachmann studied under him at the LSE.'},
+  haberler:{name:'Gottfried Haberler',dates:'1900–1995',title:'Theorist of international trade',wiki:'Gottfried_Haberler',
+    why:'Studied under Wieser and Mises and was a regular in the Mises private seminar. Recast trade theory in terms of opportunity cost; later worked alongside Schumpeter at Harvard.'},
+  morgenstern:{name:'Oskar Morgenstern',dates:'1902–1977',title:'Co-founder of game theory',wiki:'Oskar_Morgenstern',
+    why:'Co-founded game theory with John von Neumann in Theory of Games and Economic Behavior (1944). A member of Mises’s Vienna private seminar, he succeeded Hayek as head of the Austrian Institute for Business Cycle Research.'},
+  lachmann:{name:'Ludwig Lachmann',dates:'1906–1990',title:'Radical subjectivist',wiki:'Ludwig_Lachmann',
+    why:'Wrote Capital and Its Structure and carried subjectivism into expectations. Co-led NYU’s Austrian program with Kirzner. Attended Mises’s seminar, then studied under Hayek at the LSE. Taught at NYU alongside Kirzner.'},
+  machlup:{name:'Fritz Machlup',dates:'1902–1983',title:'Economist of knowledge',
+    why:'A regular in Mises’s Vienna seminar. Pioneered the economics of information and measured the “knowledge industry.” Taught at NYU from 1971 to 1983.'},
+  sennholz:{dash:1,img:'https://www.mackinac.org/media/images/2007/sennholzhans.jpg',name:'Hans Sennholz',dates:'1922–2007',title:'Mises’s first American PhD',wiki:'Hans_Sennholz',main:1,kids:1,
+    why:'Mises’s first American PhD. Built Grove City College’s economics department into an Austrian stronghold and later led the Foundation for Economic Education. Studied under Mises at NYU and taught Howard Winklevoss at Grove City. Herbener later succeeded him as department chair; the dashed line marks that succession.'},
+  rothbard:{name:'Murray Rothbard',dates:'1926–1995',title:'Fought with Ayn Rand and won',wiki:'Murray_Rothbard',kids:1,
+    why:'Wrote Man, Economy, and State and For a New Liberty. Fused Austrian economics with natural rights to found modern anarcho-capitalism. Knew Ayn Rand personally and broke with her circle in 1958, later debating and satirizing Objectivism. Co-founded the Cato Institute and helped found the Mises Institute. Attended Mises’s NYU seminar for years; Hoppe came to America to work with him.'},
+  kirzner:{name:'Israel Kirzner',dates:'b. 1930',title:'Theorist of entrepreneurship',wiki:'Israel_Kirzner',
+    why:'Wrote Competition and Entrepreneurship (1973), defining the entrepreneur as alert to opportunities others miss. Ran NYU’s Austrian program for decades. Took his PhD under Mises at NYU and taught alongside Lachmann.'},
+  herbener:{img:'./assets/herbener.jpg',name:'Jeffrey Herbener',dates:'Living',title:'Peterson-Luddy Chair, Mises Institute',wiki:'Jeffrey_Herbener',main:1,kids:1,
+    why:'Holds the Mises Institute’s Peterson-Luddy Chair in Austrian Economics. Succeeded Sennholz at Grove City College, leading its economics department since 1997. Walt Smith’s undergraduate advisor and a friend of Rothbard and Ron Paul.'},
+  hoppe:{name:'Hans-Hermann Hoppe',dates:'b. 1949',title:'Rothbard’s protégé',wiki:'Hans-Hermann_Hoppe',
+    why:'Wrote Democracy: The God That Failed. Developed argumentation ethics, succeeded Rothbard at UNLV, and founded the Property and Freedom Society. Took his doctorate under Jürgen Habermas in Germany, then came to the US as Rothbard’s protégé and colleague at UNLV.'},
+  lavoie:{name:'Don Lavoie',dates:'1951–2001',title:'Historian of the calculation debate',wiki:'Don_Lavoie',
+    why:'Earned his PhD under Kirzner at NYU in 1981 with a dissertation on the socialist calculation debate.'},
+  walter:{img:'./assets/walt-bw.png',name:'Walt Smith',dates:'b. 1998',title:'Founder of Rothbard Capital',main:1,
+    why:'Founder of Rothbard Capital. Studied Austrian Economics at Grove City College. Christian.'}
+};
+const GENS = [
+  {label:'I', people:[['menger',50]], conn:[[50,[33,50]]]},
+  {label:'II', people:[['wieser',33],['bb',50]], conn:[[50,[50,75]]]},
+  {label:'III', people:[['mises',50],['schumpeter',75]], conn:[[50,[10,28,50,70,90]]]},
+  {label:'IV', people:[['morgenstern',10],['hayek',28],['sennholz',50],['rothbard',70],['kirzner',90]], conn:[[28,[28]],[50,[50]],[70,[70]]]},
+  {label:'V', people:[['lachmann',28],['herbener',50],['hoppe',70]], conn:[[50,[50]]]},
+  {label:'VI', people:[['walter',50]]}
+];
+const INK='#9A9A9A', RED='#000000';
+class Component extends DCLogic {
+  state = { sel:'menger', imgs:{} };
+  onResize = () => this.setState({vw:window.innerWidth, vh:window.innerHeight});
+  componentWillUnmount(){ window.removeEventListener('resize', this.onResize); }
+  componentDidMount(){
+    setTimeout(() => {
+      const el = document.querySelector('[data-person="rothbard"]');
+      const box = el && el.closest('[data-tree]'); if (box) { const r = el.getBoundingClientRect(), b = box.getBoundingClientRect(); box.scrollTop = Math.max(0, box.scrollTop + (r.top - b.top) + 60 - box.clientHeight / 2); }
+    }, 350);
+    this.onResize(); window.addEventListener('resize', this.onResize);
+    Object.entries(P).forEach(([k,p])=>{
+      if(p.img){ this.setState(s=>({imgs:{...s.imgs,[k]:p.img}})); return; }
+      if(!p.wiki) return;
+      fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(p.wiki))
+        .then(r=>r.ok?r.json():null)
+        .then(d=>{ const u=d && (d.originalimage?.source || d.thumbnail?.source); if(u) this.setState(s=>({imgs:{...s.imgs,[k]:u}})); })
+        .catch(()=>{});
+    });
+  }
+  renderVals(){
+    const {sel, imgs} = this.state;
+    const vw = Math.min(this.state.vw || 1440, 1120), vh = this.state.vh || 900;
+    const showPanel = false;
+    const treeW = vw - 80 - 44 - (Math.min(320, Math.max(240, vw*0.24)) + 32);
+    const rowH = 138;
+    const shortNames = treeW * 0.135 < 150;
+    const portraitPx = 60;
+    const genOf = {};
+    const gens = GENS.map((g,gi)=>{
+      const people = g.people.map(([k,x])=>{
+        genOf[k]=g.label; const p=P[k]; const on = sel===k;
+        const img = imgs[k]||'';
+        return { ...p, key:k, left:x+'%', img, hasImg:!!img, noImg:!img,
+          bg: img ? 'url("'+img+'")' : 'none', initials: p.name.split(' ').filter(w=>/^[A-ZÖ]/.test(w)).map(w=>w[0]).slice(-2).join(''),
+          label: shortNames ? (p.short || p.name.split(' ').slice(-1)[0]) : p.name,
+          border: k==='rothbard' ? '2px solid #C0392B' : (p.main?`2px solid ${RED}`:`1px solid ${INK}`),
+          shadow: on?`0 0 0 3px #F3F2EE, 0 0 0 4px #000000`:'none',
+          nameColor: p.main?'#000000':'#333333', weight: p.main?'500':'400',
+          stemW: p.kids?(p.main?'2px':'1px'):'0', stemColor: p.dash?'repeating-linear-gradient(#000000 0 4px, transparent 4px 8px)':(p.main?RED:INK),
+          select: ()=>this.state.sel!==k && this.setState({sel:k}) };
+      });
+      const d = (g.conn||[]).map(([px,kids])=>{
+        const xs=kids.map(x=>x*10), lo=Math.min(px*10,...xs), hi=Math.max(px*10,...xs);
+        return `M${px*10} 0 V8 M${lo} 8 H${hi} `+xs.map(x=>`M${x} 8 V16`).join(' ');
+      }).join(' ');
+      return { label:g.label, people, hasConn: gi<GENS.length-1, conn:d, mainDash: g.label==='IV' ? '4 4' : 'none' };
+    });
+    const s = P[sel];
+    return {
+      onHome: (e) => { e && e.preventDefault(); this.props.onHome && this.props.onHome(e); },
+      gens,
+      titlesOn: (this.props.showTitles ?? true) && rowH >= 112,
+      showPanel,
+      datesOn: treeW * 0.135 >= 92,
+      portrait: portraitPx+'px',
+      nameSize: (treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
+      sel: { ...s, img:imgs[sel]||'', detailId:'d-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
+        genLabel:'Generation '+genOf[sel] + (s.main?' · Direct line':'') }
+    };
+  }
+}
+</script>
+</body>
+</html>
