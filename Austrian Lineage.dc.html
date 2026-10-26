@@ -79,6 +79,7 @@ a:hover{color:#555555;}
           <span style="font-family:'Newsreader',serif; font-size:14px; color:#111111;">{{ sel.title }}</span>
         </div>
       </div>
+      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:14px; line-height:1.5; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
       <sc-if value="{{ sel.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.lead }}</p></sc-if>
       <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><p style="margin:-6px 0 0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.note }}</p></sc-if>
       <span style="margin-top:auto; font-family:'Figtree',sans-serif; font-size:11px; color:#6B6B6B; line-height:1.4;">Hover or tap any name. Relationships after <a href="https://mises.co/lineages" target="_blank" style="text-decoration:underline; text-underline-offset:2px;">mises.co/lineages</a>; portraits via Wikimedia.</span>
@@ -104,6 +105,7 @@ a:hover{color:#555555;}
         </div>
       </div>
       <div style="border-top:1px solid #D4D4D4;"></div>
+      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:14px; line-height:1.5; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
       <sc-if value="{{ sel.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.lead }}</p></sc-if>
       <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><p style="margin:-6px 0 0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.note }}</p></sc-if>
       <span style="font-family:'Figtree',sans-serif; font-size:11px; color:#6B6B6B; line-height:1.4;">Relationships after <a href="https://mises.co/lineages" target="_blank" style="text-decoration:underline; text-underline-offset:2px;">mises.co/lineages</a>; portraits via Wikimedia.</span>
@@ -114,17 +116,17 @@ a:hover{color:#555555;}
 <script type="text/x-dc" data-dc-script data-props="{&quot;showTitles&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 const P = {
   menger:{name:'Carl Menger',dates:'1840–1921',title:'Father of the Austrian School',wiki:'Carl_Menger',main:1,kids:1,
-    why:'Wrote Principles of Economics (1871).'},
+    why:'Wrote Principles of Economics, launching the marginal revolution.'},
   wieser:{name:'Friedrich von Wieser',dates:'1851–1926',title:'Coined “marginal utility”',wiki:'Friedrich_von_Wieser',
     why:'Developed the concept of opportunity cost.'},
   bb:{name:'Eugen von Böhm-Bawerk',dates:'1851–1914',title:'Theorist of capital and interest',wiki:'Eugen_von_Böhm-Bawerk',main:1,kids:1,
-    why:'Explained interest through time preference.'},
+    why:'Explained interest through time preference in Capital and Interest.'},
   mises:{name:'Ludwig von Mises',dates:'1881–1973',title:'Dean of the Austrian School',wiki:'Ludwig_von_Mises',main:1,kids:1,
-    why:'Wrote Human Action.'},
+    why:'Wrote Human Action and showed socialism cannot calculate.'},
   schumpeter:{name:'Joseph Schumpeter',dates:'1883–1950',title:'Prophet of creative destruction',wiki:'Joseph_Schumpeter',
     why:'Wrote Capitalism, Socialism and Democracy.'},
   hayek:{name:'Friedrich A. Hayek',dates:'1899–1992',title:'Beat the communists',wiki:'Friedrich_Hayek',kids:1,
-    why:'Wrote The Road to Serfdom.'},
+    why:'Wrote The Road to Serfdom and won the 1974 Nobel Prize.'},
   haberler:{name:'Gottfried Haberler',dates:'1900–1995',title:'Theorist of international trade',wiki:'Gottfried_Haberler',
     why:'Recast trade theory in terms of opportunity cost.'},
   morgenstern:{name:'Oskar Morgenstern',dates:'1902–1977',title:'Co-founder of game theory',wiki:'Oskar_Morgenstern',
@@ -146,7 +148,7 @@ const P = {
   lavoie:{name:'Don Lavoie',dates:'1951–2001',title:'Historian of the calculation debate',wiki:'Don_Lavoie',
     why:'Wrote Rivalry and Central Planning.'},
   walter:{img:'./assets/walt-bw.png',name:'Walt Smith',dates:'b. 1998',title:'Founder of Rothbard Capital',lead:'Christian',note:'Daily Driver: 1974 F100',main:1,
-    why:'Studied under Jeff Herbener at Grove City College. Christian.'}
+    why:''}
 };
 const MX = {wieser:24}; // mobile-only x overrides so short names don't touch
 const GENS = [
@@ -236,7 +238,7 @@ class Component extends DCLogic {
       datesOn: !mobile && treeW * 0.135 >= 92,
       portrait: portraitPx+'px',
       nameSize: (mobile ? (rowH >= 56 ? 12 : 11) : treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
-      sel: { ...s, hasNote:!!s.note, hasLead:!!s.lead, filter: sel==='rothbard' ? 'none' : 'grayscale(1)', img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
+      sel: { ...s, hasNote:!!s.note, hasLead:!!s.lead, hasWhy:!!s.why, filter: sel==='rothbard' ? 'none' : 'grayscale(1)', img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
         genLabel:'Generation '+genOf[sel] }
     };
   }
