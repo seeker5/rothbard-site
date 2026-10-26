@@ -34,6 +34,7 @@ a:hover{color:#555555;}
         <div style="height:{{ m.rowH }}; flex-shrink:0; display:flex;">
           <div style="width:{{ m.labelW }}; flex-shrink:0; white-space:nowrap; font-family:'Poiret One',serif; font-size:{{ m.labelSize }}; color:#6B6B6B; padding-top:{{ m.labelPadT }};"></div>
           <div style="flex:1; position:relative;">
+            <sc-for list="{{ gen.pass }}" as="x" hint-placeholder-count="0"><div style="position:absolute; left:{{ x.left }}; top:0; bottom:0; width:1px; background:#9A9A9A;"></div></sc-for>
             <sc-for list="{{ gen.people }}" as="p" hint-placeholder-count="2">
               <div data-person="{{ p.key }}" onMouseEnter="{{ p.hover }}" onClick="{{ p.tap }}" style="position:absolute; left:{{ p.left }}; top:0; bottom:0; width:{{ m.personW }}; max-width:180px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer;">
                 <div style="width:{{ portrait }}; height:{{ portrait }}; flex-shrink:0; border-radius:50%; overflow:hidden; border:{{ p.border }}; box-shadow:{{ p.shadow }}; background:#E4E2DC; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-size:14px; color:#6B6B6B;">
@@ -112,7 +113,7 @@ a:hover{color:#555555;}
 const P = {
   menger:{name:'Carl Menger',dates:'1840–1921',title:'Father of the Austrian School',wiki:'Carl_Menger',main:1,kids:1,
     why:'Wrote Principles of Economics, launching the marginal revolution.'},
-  wieser:{name:'Friedrich von Wieser',dates:'1851–1926',title:'Coined “marginal utility”',wiki:'Friedrich_von_Wieser',
+  wieser:{name:'Friedrich von Wieser',dates:'1851–1926',title:'Coined “marginal utility”',wiki:'Friedrich_von_Wieser',kids:1,
     why:'Developed the concept of opportunity cost.'},
   bb:{name:'Eugen von Böhm-Bawerk',dates:'1851–1914',title:'Theorist of capital and interest',wiki:'Eugen_von_Böhm-Bawerk',main:1,kids:1,
     why:'Explained interest through time preference in Capital and Interest.'},
@@ -148,8 +149,8 @@ const P = {
 const MX = {wieser:24}; // mobile-only x overrides so short names don't touch
 const GENS = [
   {label:'I', people:[['menger',50]], conn:[[50,[33,50]]], mconn:[[50,[MX.wieser,50]]]},
-  {label:'II', people:[['wieser',33],['bb',50]], conn:[[50,[50,75]]]},
-  {label:'III', people:[['mises',50],['schumpeter',75]], conn:[[50,[10,28,50,70,90]]]},
+  {label:'II', people:[['wieser',33],['bb',50]], conn:[[50,[50,75]],[24,[28]]]},
+  {label:'III', people:[['mises',50],['schumpeter',75]], pass:[28], conn:[[50,[10,28,50,70,90]],[28,[28]]]},
   {label:'IV', people:[['morgenstern',10],['hayek',28],['sennholz',50],['rothbard',70],['kirzner',90]], conn:[[28,[28]],[50,[50]],[70,[70]]]},
   {label:'V', people:[['lachmann',28],['herbener',50],['hoppe',70]], conn:[[50,[50]]]},
   {label:'VI', people:[['walter',50]]}
@@ -213,7 +214,7 @@ class Component extends DCLogic {
         const xs=kids.map(x=>x*10), lo=Math.min(px*10,...xs), hi=Math.max(px*10,...xs);
         return `M${px*10} 0 V8 M${lo} 8 H${hi} `+xs.map(x=>`M${x} 8 V16`).join(' ');
       }).join(' ');
-      return { label:g.label, people, hasConn: gi<GENS.length-1, conn:d, mainDash: g.label==='IV' ? '4 4' : 'none' };
+      return { label:g.label, people, pass:(g.pass||[]).map(x=>({left:x+'%'})), hasConn: gi<GENS.length-1, conn:d, mainDash: g.label==='IV' ? '4 4' : 'none' };
     });
     const s = P[sel];
     return {
