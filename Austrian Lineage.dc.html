@@ -39,7 +39,7 @@ a:hover{color:#555555;}
               <div data-person="{{ p.key }}" onMouseEnter="{{ p.hover }}" onClick="{{ p.tap }}" style="position:absolute; left:{{ p.left }}; top:0; bottom:0; width:{{ m.personW }}; max-width:180px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer;">
                 <div style="width:{{ portrait }}; height:{{ portrait }}; flex-shrink:0; border-radius:50%; overflow:hidden; border:{{ p.border }}; box-shadow:{{ p.shadow }}; background:#E4E2DC; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-size:14px; color:#6B6B6B;">
                   <sc-if value="{{ p.hasImg }}" hint-placeholder-val="{{ false }}">
-                    <div role="img" aria-label="{{ p.name }}" style="width:100%; height:100%; background-image:{{ p.bg }}; background-size:cover; background-position:50% 20%;"></div>
+                    <div role="img" aria-label="{{ p.name }}" style="width:100%; height:100%; background-image:{{ p.bg }}; background-size:cover; background-position:50% 20%; filter:{{ p.filter }};"></div>
                   </sc-if>
                   <sc-if value="{{ p.noImg }}" hint-placeholder-val="{{ true }}">
                     <span>{{ p.initials }}</span>
@@ -70,7 +70,7 @@ a:hover{color:#555555;}
       
       <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-start;">
         <div style="width:112px; height:140px; flex-shrink:0; overflow:hidden; background:#E4E2DC;">
-          <image-slot id="{{ sel.detailId }}" shape="rect" src="{{ sel.img }}" placeholder="{{ sel.placeholder }}" style="width:100%; height:100%; display:block;"></image-slot>
+          <image-slot id="{{ sel.detailId }}" shape="rect" src="{{ sel.img }}" placeholder="{{ sel.placeholder }}" style="width:100%; height:100%; display:block; filter:{{ sel.filter }};"></image-slot>
         </div>
         <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
           <span style="font-family:'Figtree',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">{{ sel.genLabel }}</span>
@@ -94,7 +94,7 @@ a:hover{color:#555555;}
       </button>
       <div style="display:flex; gap:16px; align-items:flex-end; padding-right:36px;">
         <div style="width:96px; height:120px; flex-shrink:0; overflow:hidden; background:#E4E2DC;">
-          <image-slot id="{{ sel.popId }}" shape="rect" src="{{ sel.img }}" placeholder="{{ sel.placeholder }}" style="width:100%; height:100%; display:block;"></image-slot>
+          <image-slot id="{{ sel.popId }}" shape="rect" src="{{ sel.img }}" placeholder="{{ sel.placeholder }}" style="width:100%; height:100%; display:block; filter:{{ sel.filter }};"></image-slot>
         </div>
         <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
           <span style="font-family:'Figtree',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">{{ sel.genLabel }}</span>
@@ -201,7 +201,7 @@ class Component extends DCLogic {
         genOf[k]=g.label; const p=P[k]; const on = sel===k;
         const img = imgs[k]||'';
         if (mobile && MX[k] != null) x = MX[k];
-        return { ...p, key:k, left:x+'%', img, hasImg:!!img, noImg:!img, hasNote:!!p.note,
+        return { ...p, key:k, left:x+'%', img, hasImg:!!img, noImg:!img, hasNote:!!p.note, filter: k==='rothbard' ? 'none' : 'grayscale(1)',
           bg: img ? 'url("'+img+'")' : 'none', initials: p.name.split(' ').filter(w=>/^[A-ZÖ]/.test(w)).map(w=>w[0]).slice(-2).join(''),
           label: shortNames ? (p.short || p.name.split(' ').slice(-1)[0]) : p.name,
           border: k==='rothbard' ? '2px solid #C0392B' : (p.main?`2px solid ${RED}`:`1px solid ${INK}`),
@@ -236,7 +236,7 @@ class Component extends DCLogic {
       datesOn: !mobile && treeW * 0.135 >= 92,
       portrait: portraitPx+'px',
       nameSize: (mobile ? (rowH >= 56 ? 12 : 11) : treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
-      sel: { ...s, hasNote:!!s.note, img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
+      sel: { ...s, hasNote:!!s.note, filter: sel==='rothbard' ? 'none' : 'grayscale(1)', img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
         genLabel:'Generation '+genOf[sel] }
     };
   }
