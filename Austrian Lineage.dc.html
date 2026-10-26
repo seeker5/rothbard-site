@@ -18,7 +18,7 @@ a:hover{color:#555555;}
 </style>
 </helmet>
 <div style="height:{{ m.wrapH }}; min-height:calc(100vh - 70px); overflow:{{ m.wrapOverflow }}; box-sizing:border-box; max-width:1120px; margin:0 auto; padding:{{ m.wrapPad }}; background:#F3F2EE; color:#111111; font-family:'Newsreader', Georgia, serif; display:flex; flex-direction:column; gap:clamp(10px,1.6vh,18px);">
-  <header style="flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; border-bottom:1px solid #D4D4D4; padding-bottom:clamp(8px,1.2vh,14px);">
+  <header style="flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;">
     <a href="#" onClick="{{ onHome }}" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#000000; text-decoration:none; cursor:pointer; text-align:center;">
         <span style="font-family:'Poiret One',serif; font-weight:400; font-size:clamp(36px, 4vw, 56px); line-height:1; letter-spacing:0.05em; display:block; text-align:center; margin:0;">Rothbard</span>
         <span style="display:block; text-align:center; margin:0; font-family:'Poiret One',serif; font-weight:400; font-size:clamp(11px, 1.05vw, 15px); line-height:1; letter-spacing:0.42em; padding-left:0.42em; text-transform:uppercase;">Capital</span>
@@ -26,7 +26,7 @@ a:hover{color:#555555;}
 
   </header>
 
-  <div style="flex:{{ m.bodyFlex }}; min-height:0; display:flex; gap:clamp(16px,2vw,32px);">
+  <div style="flex:{{ m.bodyFlex }}; min-height:0; display:flex; gap:clamp(16px,2vw,32px); margin-top:58px; border-top:1px solid #D4D4D4; padding-top:20px;">
 
 
     <div data-tree="1" style="flex:1; min-width:0; min-height:0; overflow-y:{{ m.treeOverflow }}; display:flex; flex-direction:column; padding-bottom:{{ m.treePadB }};">
@@ -57,7 +57,7 @@ a:hover{color:#555555;}
         <sc-if value="{{ gen.hasConn }}" hint-placeholder-val="{{ true }}">
           <svg viewBox="0 0 1000 16" preserveAspectRatio="none" style="display:block; width:calc(100% - {{ m.labelW }}); margin-left:{{ m.labelW }}; height:{{ m.connH }}; flex-shrink:0; overflow:visible;">
             <path d="{{ gen.conn }}" fill="none" stroke="#9A9A9A" stroke-width="1" vector-effect="non-scaling-stroke"></path>
-            <path d="M500 0 V16" fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="{{ gen.mainDash }}" vector-effect="non-scaling-stroke"></path>
+            <path d="M500 0 V16" fill="none" stroke="#9A9A9A" stroke-width="1" stroke-dasharray="{{ gen.mainDash }}" vector-effect="non-scaling-stroke"></path>
           </svg>
         </sc-if>
       </sc-for>
@@ -77,7 +77,7 @@ a:hover{color:#555555;}
           <span style="font-family:'Figtree',sans-serif; font-size:12px; color:#6B6B6B;">{{ sel.dates }}</span>
         </div>
       </div>
-      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:14px; line-height:1.5; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
+      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
       <sc-if value="{{ sel.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.lead }}</p></sc-if>
       <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><p style="margin:-6px 0 0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.note }}</p></sc-if>
     </aside>
@@ -95,13 +95,13 @@ a:hover{color:#555555;}
           <image-slot id="{{ sel.popId }}" shape="rect" src="{{ sel.img }}" placeholder="{{ sel.placeholder }}" style="width:100%; height:100%; display:block; filter:{{ sel.filter }};"></image-slot>
         </div>
         <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
-          <span style="font-family:'Newsreader',serif; font-size:24px; line-height:1.05; color:#000000;">{{ sel.name }}</span>
+          <span style="font-family:'Newsreader',serif; font-size:26px; line-height:1.1; color:#000000;">{{ sel.name }}</span>
           <span style="font-family:'Newsreader',serif; font-size:15px; color:#111111;">{{ sel.title }}</span>
           <span style="font-family:'Figtree',sans-serif; font-size:12px; color:#6B6B6B;">{{ sel.dates }}</span>
         </div>
       </div>
       <div style="border-top:1px solid #D4D4D4;"></div>
-      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:14px; line-height:1.5; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
+      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
       <sc-if value="{{ sel.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.lead }}</p></sc-if>
       <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><p style="margin:-6px 0 0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.note }}</p></sc-if>
     </div>
@@ -201,10 +201,10 @@ class Component extends DCLogic {
         return { ...p, key:k, left:x+'%', img, hasImg:!!img, noImg:!img, hasNote:!!p.note, filter: k==='rothbard' ? 'none' : 'grayscale(1)',
           bg: img ? 'url("'+img+'")' : 'none', initials: p.name.split(' ').filter(w=>/^[A-ZÖ]/.test(w)).map(w=>w[0]).slice(-2).join(''),
           label: shortNames ? (p.short || p.name.split(' ').slice(-1)[0]) : p.name,
-          border: k==='rothbard' ? '2px solid #C0392B' : (p.main?`2px solid ${RED}`:`1px solid ${INK}`),
+          border: '1px solid #111111',
           shadow: (on && (!mobile || open))?`0 0 0 3px #F3F2EE, 0 0 0 4px #000000`:'none',
-          nameColor: p.main?'#000000':'#333333', weight: p.main?'500':'400',
-          stemW: p.kids?(p.main?'2px':'1px'):'0', stemColor: p.dash?'repeating-linear-gradient(#000000 0 4px, transparent 4px 8px)':(p.main?RED:INK),
+          nameColor: '#000000', weight: '400',
+          stemW: p.kids?'1px':'0', stemColor: p.dash?'repeating-linear-gradient(#9A9A9A 0 4px, transparent 4px 8px)':INK,
           select: ()=>this.state.sel!==k && this.setState({sel:k}),
           hover: mobile ? (()=>{}) : (()=>this.state.sel!==k && this.setState({sel:k})),
           tap: mobile ? (()=>this.setState({sel:k, open:true})) : (()=>this.state.sel!==k && this.setState({sel:k})) };
