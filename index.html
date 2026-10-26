@@ -10,7 +10,7 @@
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&amp;family=Poiret+One&amp;family=Figtree:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&amp;family=Poiret+One&amp;family=Mrs+Saint+Delafield&amp;family=Figtree:wght@400;500;600&amp;display=swap" rel="stylesheet">
   <script src="./image-slot.js"></script>
   <style>
     html, body { margin: 0; padding: 0; background: #FFFFFF; }
@@ -32,7 +32,7 @@
       </div>
     </header>
     <main style="position:relative; flex:1; display:flex; align-items:center; justify-content:center; padding:0 24px;">
-      <h1 style="margin:0; text-align:center; font-family:'Newsreader',serif; font-style:italic; font-weight:300; font-size:clamp(28px, 5.2vw, 84px); white-space:nowrap; line-height:1; letter-spacing:-0.02em; color:{{ taglineColor }}; text-shadow:0 2px 30px rgba(0,0,0,0.35);">Humans Act.</h1>
+      <h1 style="margin:0; text-align:center; font-family:'Mrs Saint Delafield',cursive; font-style:normal; font-weight:400; font-size:clamp(46px, 8vw, 128px); white-space:nowrap; line-height:1; letter-spacing:-0.02em; color:{{ taglineColor }}; text-shadow:0 2px 30px rgba(0,0,0,0.35);">Humans Act.</h1>
     </main>
     <nav style="position:relative; display:flex; flex-wrap:wrap; justify-content:center; gap:12px clamp(14px, 4.5vw, 44px); padding:0 clamp(8px, 3vw, 24px) 44px;">
       <sc-for list="{{ navFlat }}" as="n" hint-placeholder-count="3">
@@ -143,15 +143,15 @@ class Component extends DCLogic {
     const co = (name, desc, inv, stage, url) => ({ name, desc, inv, stage, logo: LOGOS[name] || '', tile: '#F0F0F0', outline: name === 'NOAT' ? '1px solid #D6D4CE' : 'none', url: url || '#', target: url ? '_blank' : '_self', slot: 'logo-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-') });
     const sectors = [
       { name: 'HISTORIC INVESTMENTS', cos: [
-        co('Guardian Intelligence Inc.', 'Highly personalized LLMs.', '', '', 'https://gwern.net/guardian-angel'),
-        co('Rainmaker', 'Making every ski season El Niño.', '', '', 'https://www.rainmaker.com/'),
+        co('Guardian Intelligence Inc.', 'Personal and secure LLMs.', '', '', 'https://gwern.net/guardian-angel'),
+        co('Rainmaker', 'Making every winter El Niño.', '', '', 'https://www.rainmaker.com/'),
         co('Ardent', 'The flying car company.', '', '', 'https://x.com/flyardent'),
         co('Terranova', 'Building a new continent.', '', '', 'https://www.terranova.inc/'),
         co('NOAT', 'Artisan microplastic-free nicotine.', '', ''),
-        co('Pearl Research', 'The most efficient inference engine.', '', '', 'https://pearlresearch.ai'),
+        co('Pearl Research', 'Novel economic inference engine.', '', '', 'https://pearlresearch.ai'),
         co('Synteq Digital', 'The next great American neo-cloud.', '', ''),
-        co('Seed Oil Scout', 'Bringing transparency to eating out.', '', ''),
-        co('EdgeRun AI', 'Upgrading humanity with exoskeletons.', '', '') ] }
+        co('Seed Oil Scout', 'Making eating out healthy.', '', ''),
+        co('EdgeRun AI', 'Making exoskeletons for humans.', '', '') ] }
     ];
     return {
       taglineColor: this.props.taglineColor ?? '#F2EBDC',
