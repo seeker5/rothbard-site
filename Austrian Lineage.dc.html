@@ -46,6 +46,7 @@ a:hover{color:#555555;}
                   </sc-if>
                 </div>
                 <div style="margin-top:3px; font-family:'Newsreader',serif; font-size:{{ nameSize }}; font-weight:{{ p.weight }}; line-height:1.1; white-space:nowrap; color:{{ p.nameColor }};">{{ p.label }}</div>
+                <sc-if value="{{ p.hasNote }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Figtree',sans-serif; font-size:10px; color:#333333; line-height:1.3; white-space:nowrap;">{{ p.note }}</div></sc-if>
                 <sc-if value="{{ datesOn }}" hint-placeholder-val="{{ true }}"><div style="font-family:'Figtree',sans-serif; font-size:11px; color:#6B6B6B; line-height:1.3; white-space:nowrap;">{{ p.dates }}</div></sc-if>
                 <sc-if value="{{ titlesOn }}" hint-placeholder-val="{{ true }}">
                   <div style="font-family:'Newsreader',serif; font-size:12px; font-style:italic; line-height:1.15; color:#333333; text-wrap:balance; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ p.title }}</div>
@@ -72,6 +73,7 @@ a:hover{color:#555555;}
         <div style="display:flex; flex-direction:column; gap:3px; min-width:0;">
           <span style="font-family:'Figtree',sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">{{ sel.genLabel }}</span>
           <span style="font-family:'Newsreader',serif; font-style:italic; font-size:22px; line-height:1.05; color:#000000;">{{ sel.name }}</span>
+          <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Figtree',sans-serif; font-size:11px; color:#111111;">{{ sel.note }}</span></sc-if>
           <span style="font-family:'Figtree',sans-serif; font-size:12px; color:#6B6B6B;">{{ sel.dates }}</span>
           <span style="font-family:'Newsreader',serif; font-size:14px; color:#111111;">{{ sel.title }}</span>
         </div>
@@ -116,7 +118,7 @@ const P = {
     why:'Wrote Democracy: The God That Failed. Developed argumentation ethics, succeeded Rothbard at UNLV, and founded the Property and Freedom Society. Took his doctorate under Jürgen Habermas in Germany, then came to the US as Rothbard’s protégé and colleague at UNLV.'},
   lavoie:{name:'Don Lavoie',dates:'1951–2001',title:'Historian of the calculation debate',wiki:'Don_Lavoie',
     why:'Earned his PhD under Kirzner at NYU in 1981 with a dissertation on the socialist calculation debate.'},
-  walter:{img:'./assets/walt-bw.png',name:'Walt Smith',dates:'b. 1998',title:'Founder of Rothbard Capital',main:1,
+  walter:{img:'./assets/walt-bw.png',name:'Walt Smith',dates:'b. 1998',title:'Founder of Rothbard Capital',note:'Daily Driver: 1974 F100',main:1,
     why:'Founder of Rothbard Capital. Studied Austrian Economics at Grove City College. Christian.'}
 };
 const GENS = [
@@ -160,7 +162,7 @@ class Component extends DCLogic {
       const people = g.people.map(([k,x])=>{
         genOf[k]=g.label; const p=P[k]; const on = sel===k;
         const img = imgs[k]||'';
-        return { ...p, key:k, left:x+'%', img, hasImg:!!img, noImg:!img,
+        return { ...p, key:k, left:x+'%', img, hasImg:!!img, noImg:!img, hasNote:!!p.note,
           bg: img ? 'url("'+img+'")' : 'none', initials: p.name.split(' ').filter(w=>/^[A-ZÖ]/.test(w)).map(w=>w[0]).slice(-2).join(''),
           label: shortNames ? (p.short || p.name.split(' ').slice(-1)[0]) : p.name,
           border: k==='rothbard' ? '2px solid #C0392B' : (p.main?`2px solid ${RED}`:`1px solid ${INK}`),
@@ -184,7 +186,7 @@ class Component extends DCLogic {
       datesOn: treeW * 0.135 >= 92,
       portrait: portraitPx+'px',
       nameSize: (treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
-      sel: { ...s, img:imgs[sel]||'', detailId:'d-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
+      sel: { ...s, hasNote:!!s.note, img:imgs[sel]||'', detailId:'d-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
         genLabel:'Generation '+genOf[sel] + (s.main?' · Direct line':'') }
     };
   }
