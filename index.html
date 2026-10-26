@@ -139,7 +139,7 @@ class Component extends DCLogic {
       style: { display: 'flex', flexDirection: 'column', gap: '4px', padding: '0 20px', borderLeft: i ? '1px solid #D4D4D4' : 'none', paddingLeft: i ? '20px' : '0' }
     }));
     navCols.forEach(c => c.items.forEach(it => { it.style = Object.fromEntries(it.style.split(';').filter(s => s.trim()).map(s => { const [k, ...v] = s.split(':'); return [k.trim().replace(/-([a-z])/g, (_, ch) => ch.toUpperCase()), v.join(':').trim()]; })); }));
-    const LOGOS = {"Guardian Intelligence Inc.":"./assets/logos/guardian-new.png","Pearl Research":"./assets/logos/pearl-dots.jpg","Seed Oil Scout":"./assets/logos/sos.jpg","Rainmaker":"./assets/logos/rainmaker-tile.svg","Terranova":"./assets/logos/terranova.jpg","Ardent":"./assets/logos/ardent.jpg","EdgeRun AI":"./assets/logos/edgerun.jpg","NOAT":"./assets/logos/noat.jpg"};
+    const LOGOS = {"Guardian Intelligence Inc.":"./assets/logos/guardian-new.png","Pearl Research":"./assets/logos/pearl-dots.jpg","Seed Oil Scout":"./assets/logos/sos.jpg","Rainmaker":"./assets/logos/rainmaker-tile.svg","Terranova":"./assets/logos/terranova.jpg","Ardent":"./assets/logos/ardent.jpg","EdgeRun Industries":"./assets/logos/edgerun.jpg","NOAT":"./assets/logos/noat.jpg"};
     const co = (name, desc, inv, stage, url) => ({ name, desc, inv, stage, logo: LOGOS[name] || '', tile: '#F0F0F0', outline: name === 'NOAT' ? '1px solid #D6D4CE' : 'none', url: url || '#', target: url ? '_blank' : '_self', slot: 'logo-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-') });
     const sectors = [
       { name: 'HISTORIC INVESTMENTS', cos: [
@@ -151,7 +151,7 @@ class Component extends DCLogic {
         co('Pearl Research', 'Novel economic inference engine.', '', '', 'https://pearlresearch.ai'),
         co('Synteq Digital', 'The next great American neo-cloud.', '', ''),
         co('Seed Oil Scout', 'Making eating out healthy.', '', ''),
-        co('EdgeRun AI', 'Making exoskeletons for humans.', '', '') ] }
+        co('EdgeRun Industries', 'Making exoskeletons for humans.', '', '') ] }
     ];
     return {
       taglineColor: this.props.taglineColor ?? '#F2EBDC',
