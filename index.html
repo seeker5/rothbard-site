@@ -44,6 +44,7 @@
 
 <sc-if value="{{ isInner }}" hint-placeholder-val="{{ false }}">
   <div data-screen-label="{{ pageLabel }}" style="position:relative; min-height:100vh; background:#F3F2EE; color:#111111;">
+    <img src="./assets/ship-mark-dark.png" alt="" aria-hidden="true" style="position:absolute; top:clamp(18px, 2.6vw, 32px); left:clamp(18px, 3vw, 40px); width:clamp(40px, 4.4vw, 60px); height:auto; opacity:0.55; pointer-events:none; z-index:5;">
     <sc-if value="{{ isLineage }}" hint-placeholder-val="{{ false }}">
       <dc-import name="Austrian Lineage" on-home="{{ goCover }}" hint-size="100%,calc(100vh - 70px)"></dc-import>
     </sc-if>
