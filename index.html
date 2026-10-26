@@ -33,9 +33,9 @@
     <main style="position:relative; flex:1; display:flex; align-items:center; justify-content:center; padding:0 24px;">
       <h1 style="margin:0; text-align:center; font-family:'Newsreader',serif; font-style:italic; font-weight:300; font-size:clamp(28px, 5.2vw, 84px); white-space:nowrap; line-height:1; letter-spacing:-0.02em; color:{{ taglineColor }}; text-shadow:0 2px 30px rgba(0,0,0,0.35);">Humans Act.</h1>
     </main>
-    <nav style="position:relative; display:flex; flex-wrap:wrap; justify-content:center; gap:12px 44px; padding:0 24px 44px;">
+    <nav style="position:relative; display:flex; flex-wrap:wrap; justify-content:center; gap:12px clamp(14px, 4.5vw, 44px); padding:0 clamp(8px, 3vw, 24px) 44px;">
       <sc-for list="{{ navFlat }}" as="n" hint-placeholder-count="3">
-        <a href="#" onClick="{{ n.go }}" style="color:#FFFFFF; font-family:'Newsreader',serif; font-size:13px; letter-spacing:0.32em; text-transform:uppercase; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.5);" style-hover="color:#FFFFFF; border-bottom:1px solid #FFFFFF;">{{ n.label }}</a>
+        <a href="#" onClick="{{ n.go }}" style="color:#FFFFFF; font-family:'Newsreader',serif; font-size:clamp(10.5px, 2.9vw, 13px); letter-spacing:clamp(1.5px, 0.8vw, 4.2px); text-transform:uppercase; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.5);" style-hover="color:#FFFFFF; border-bottom:1px solid #FFFFFF;">{{ n.label }}</a>
       </sc-for>
     </nav>
   </div>
@@ -46,7 +46,7 @@
     <sc-if value="{{ isLineage }}" hint-placeholder-val="{{ false }}">
       <dc-import name="Austrian Lineage" on-home="{{ goCover }}" hint-size="100%,calc(100vh - 70px)"></dc-import>
     </sc-if>
-      <nav style="position:fixed; left:0; right:0; bottom:0; z-index:10; background:rgba(243,242,238,0.94); backdrop-filter:blur(6px); border-top:1px solid #D4D4D4; display:flex; flex-wrap:wrap; justify-content:center; gap:8px 44px; padding:14px 24px 18px;">
+      <nav style="position:fixed; left:0; right:0; bottom:0; z-index:10; background:rgba(243,242,238,0.94); backdrop-filter:blur(6px); border-top:1px solid #D4D4D4; display:flex; flex-wrap:wrap; justify-content:center; gap:8px clamp(14px, 4.5vw, 44px); padding:14px clamp(8px, 3vw, 24px) 18px;">
         <sc-for list="{{ navFlat }}" as="n" hint-placeholder-count="4">
           <a href="#" onClick="{{ n.go }}" style="{{ n.barStyle }}" style-hover="color:#000000;">{{ n.label }}</a>
         </sc-for>
@@ -125,10 +125,10 @@
 class Component extends DCLogic {
   shuffled(arr) { if (!this._order) { this._order = arr.map((_, i) => i); for (let i = this._order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [this._order[i], this._order[j]] = [this._order[j], this._order[i]]; } } return this._order.map(i => arr[i]); }
   state = { page: localStorage.getItem('rc-site-page') || 'cover', subscribed: false };
-  go(p) { return (e) => { e && e.preventDefault(); localStorage.setItem('rc-site-page', p); this.setState({ page: p }); window.scrollTo(0, 0); }; }
+  go(p) { return (e) => { e && e.preventDefault(); if (p === 'writing') { window.open('https://substack.com/@waltsmith/posts', '_blank', 'noopener'); return; } localStorage.setItem('rc-site-page', p); this.setState({ page: p }); window.scrollTo(0, 0); }; }
   renderVals() {
     const p = this.state.page;
-    const L = { about: 'About', portfolio: 'Portfolio', lineage: 'Lineage' };
+    const L = { about: 'About', portfolio: 'Portfolio', lineage: 'Lineage', writing: 'Writing' };
     if (p === 'contact' || p === 'newsletter' || p === 'walt') { setTimeout(() => this.go('about')(), 0); }
     const link = (k) => ({ label: L[k], go: this.go(k),
       style: `font-family:'Newsreader',serif; font-size:13px; letter-spacing:0.28em; text-transform:uppercase; padding:6px 0; color:${p === k ? '#000000' : '#8A8A8A'}; ${p === k ? 'font-weight:500;' : ''}` });
@@ -161,7 +161,7 @@ class Component extends DCLogic {
         : { mark: '#000000', body: '#111111', accent: '#000000', rule: '#D4D4D4', muted: '#6B6B6B' },
       isAbout: p === 'about', isLineage: p === 'lineage', notLineage: p !== 'lineage', isContact: p === 'contact', isPortfolio: p === 'portfolio',
       pageLabel: L[p] || 'Cover',
-      navFlat: ['about', 'portfolio', 'lineage'].map(k => ({ label: L[k], go: this.go(k), barStyle: { color: p === k ? '#000000' : '#111111', fontFamily: "'Newsreader',serif", fontSize: '13px', letterSpacing: '0.32em', textTransform: 'uppercase', padding: '10px 0', borderBottom: p === k ? '1px solid #000000' : '1px solid transparent' } })),
+      navFlat: ['about', 'portfolio', 'lineage', 'writing'].map(k => ({ label: L[k], go: this.go(k), barStyle: { color: p === k ? '#000000' : '#111111', fontFamily: "'Newsreader',serif", fontSize: 'clamp(10.5px, 2.9vw, 13px)', letterSpacing: 'clamp(1.5px, 0.8vw, 4.2px)', textTransform: 'uppercase', padding: '10px 0', borderBottom: p === k ? '1px solid #000000' : '1px solid transparent' } })),
       navCols, sectors, goCover: this.go('cover'),
       subscribed: this.state.subscribed, notSubscribed: !this.state.subscribed,
       subscribe: (e) => { e.preventDefault(); this.setState({ subscribed: true }); }
