@@ -78,9 +78,7 @@ a:hover{color:#555555;}
           <span style="font-family:'Figtree',sans-serif; font-size:12px; color:#6B6B6B;">{{ sel.dates }}</span>
         </div>
       </div>
-      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
-      <sc-if value="{{ sel.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.lead }}</p></sc-if>
-      <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><p style="margin:-6px 0 0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.note }}</p></sc-if>
+      <sc-for list="{{ sel.lines }}" as="ln" hint-placeholder-count="1"><p style="margin:0; font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111; text-wrap:pretty;">{{ ln.t }}</p></sc-for>
     </aside>
   </div>
 </div>
@@ -102,9 +100,7 @@ a:hover{color:#555555;}
         </div>
       </div>
       <div style="border-top:1px solid #D4D4D4;"></div>
-      <sc-if value="{{ sel.hasWhy }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111; text-wrap:pretty;">{{ sel.why }}</p></sc-if>
-      <sc-if value="{{ sel.hasLead }}" hint-placeholder-val="{{ false }}"><p style="margin:0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.lead }}</p></sc-if>
-      <sc-if value="{{ sel.hasNote }}" hint-placeholder-val="{{ false }}"><p style="margin:-6px 0 0; font-family:'Figtree',sans-serif; font-size:12px; color:#111111;">{{ sel.note }}</p></sc-if>
+      <sc-for list="{{ sel.lines }}" as="ln" hint-placeholder-count="1"><p style="margin:0; font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111; text-wrap:pretty;">{{ ln.t }}</p></sc-for>
     </div>
   </div>
 </sc-if>
@@ -132,7 +128,7 @@ const P = {
   machlup:{name:'Fritz Machlup',dates:'1902–1983',title:'Economist of knowledge',
     why:'Measured the “knowledge industry.”'},
   sennholz:{dash:1,img:'./assets/sennholz.jpg',name:'Hans Sennholz',dates:'1922–2007',title:'Mises’s first American PhD',wiki:'Hans_Sennholz',main:1,kids:1,
-    why:'Nazi fighter pilot turned libertarian Christian.'},
+    why:'Nazi fighter pilot turned libertarian Christian.',note:'Started Grove City’s economics program.'},
   rothbard:{name:'Murray Rothbard',dates:'1926–1995',title:'Mr. Libertarian',wiki:'Murray_Rothbard',kids:1,
     why:'Wrote Man, Economy, and State.'},
   kirzner:{name:'Israel Kirzner',dates:'b. 1930',title:'Theorist of entrepreneurship',wiki:'Israel_Kirzner',
@@ -143,13 +139,13 @@ const P = {
     why:'Wrote Democracy: The God That Failed.'},
   lavoie:{name:'Don Lavoie',dates:'1951–2001',title:'Historian of the calculation debate',wiki:'Don_Lavoie',
     why:'Wrote Rivalry and Central Planning.'},
-  walter:{img:'./assets/walt-bw.png',name:'Walt Smith',dates:'b. 1998',title:'Founder of Rothbard Capital',lead:'Christian',note:'Daily Driver: 1974 F100',main:1,
+  walter:{img:'./assets/walt-bw.png',name:'Walt Smith',dates:'b. 1998',title:'Founder of Rothbard Capital',lead:'Christian',note:'Daily Driver: 1974 F100',extra:'Economics, Grove City College 2021',main:1,
     why:''}
 };
-const MX = {wieser:24}; // mobile-only x overrides so short names don't touch
+const MX = {wieser:28}; // mobile-only x overrides so short names don't touch
 const GENS = [
   {label:'I', people:[['menger',50]], conn:[[50,[33,50]]], mconn:[[50,[MX.wieser,50]]]},
-  {label:'II', people:[['wieser',33],['bb',50]], conn:[[50,[50,75]],[24,[28]]]},
+  {label:'II', people:[['wieser',33],['bb',50]], conn:[[50,[50,75]],[28,[28]]]},
   {label:'III', people:[['mises',50],['schumpeter',75]], pass:[28], conn:[[50,[10,28,50,70,90]],[28,[28]]]},
   {label:'IV', people:[['morgenstern',10],['hayek',28],['sennholz',50],['rothbard',70],['kirzner',90]], conn:[[28,[28]],[50,[50]],[70,[70]]]},
   {label:'V', people:[['lachmann',28],['herbener',50],['hoppe',70]], conn:[[50,[50]]]},
@@ -234,7 +230,7 @@ class Component extends DCLogic {
       datesOn: !mobile && treeW * 0.135 >= 92,
       portrait: portraitPx+'px',
       nameSize: (mobile ? (rowH >= 56 ? 12 : 11) : treeW * 0.135 < 100 ? 11 : rowH < 80 ? 13 : 15)+'px',
-      sel: { ...s, hasNote:!!s.note, hasLead:!!s.lead, hasWhy:!!s.why, filter: sel==='rothbard' ? 'none' : 'grayscale(1)', img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
+      sel: { ...s, lines:[s.why,s.lead,s.note,s.extra].filter(Boolean).map(t=>({t})), hasNote:!!s.note, hasLead:!!s.lead, hasWhy:!!s.why, filter: sel==='rothbard' ? 'none' : 'grayscale(1)', img:imgs[sel]||'', detailId:'d-'+sel, popId:'m-'+sel, placeholder:sel==='walter'?'Drop your photo':'Portrait',
         genLabel:'Generation '+genOf[sel] }
     };
   }
