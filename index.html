@@ -128,8 +128,9 @@ const VERSES=[{"r": "Psalm 115:3", "t": "But our God is in the heavens: he hath 
 
 class Component extends DCLogic {
   shuffled(arr) { if (!this._order) { this._order = arr.map((_, i) => i); for (let i = this._order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [this._order[i], this._order[j]] = [this._order[j], this._order[i]]; } } return this._order.map(i => arr[i]); }
-  state = { page: localStorage.getItem('rc-site-page') || 'cover', subscribed: false };
-  go(p) { return (e) => { e && e.preventDefault(); if (p === 'writing') { window.open('https://substack.com/@waltsmith/posts', '_blank', 'noopener'); return; } localStorage.setItem('rc-site-page', p); this.setState({ page: p }); window.scrollTo(0, 0); }; }
+  state = { page: (['about','portfolio','lineage'].find(k => location.pathname.replace(/\/+$/,'').replace(/\.html$/,'').endsWith('/'+k))) || 'cover', subscribed: false };
+  componentDidMount() { window.addEventListener('popstate', () => { const k = ['about','portfolio','lineage'].find(k => location.pathname.replace(/\/+$/,'').replace(/\.html$/,'').endsWith('/'+k)); this.setState({ page: k || 'cover' }); }); }
+  go(p) { return (e) => { e && e.preventDefault(); if (p === 'writing') { window.open('https://substack.com/@waltsmith/posts', '_blank', 'noopener'); return; } history.pushState(null, '', p === 'cover' ? '/' : '/' + p); this.setState({ page: p }); window.scrollTo(0, 0); }; }
   renderVals() {
     const p = this.state.page;
     const L = { about: 'About', portfolio: 'Portfolio', lineage: 'Lineage', writing: 'Writing' };

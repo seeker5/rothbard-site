@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&amp;family=Poiret+One&amp;family=Figtree:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: #FFFFFF; }
+    * { box-sizing: border-box; }
+    a { color: #000000; text-decoration: none; }
+    a:hover { color: #000000; }
+  </style>
+</helmet>
+
+<sc-if value="{{ isCover }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Cover" style="position:relative; height:100vh; min-height:560px; overflow:hidden; background:#1a1a1a; color:#FFFFFF; display:flex; flex-direction:column;">
+    <img src="./assets/cover-alps.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 12%;">
+    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.1) 65%, rgba(0,0,0,0.5) 100%); pointer-events:none;"></div>
+    <header style="position:relative; display:flex; justify-content:center; padding:32px 40px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center;">
+        <span style="font-family:'Poiret One',serif; font-weight:400; font-size:clamp(36px, 4vw, 56px); line-height:1; letter-spacing:0.05em; display:block; text-align:center; margin:0;">Rothbard</span>
+        <span style="display:block; text-align:center; margin:0; font-family:'Poiret One',serif; font-weight:400; font-size:clamp(11px, 1.05vw, 15px); line-height:1; letter-spacing:0.42em; padding-left:0.42em; text-transform:uppercase;">Capital</span>
+      </div>
+    </header>
+    <main style="position:relative; flex:1; display:flex; align-items:center; justify-content:center; padding:0 24px;">
+      <p style="margin:0; max-width:560px; text-align:center; font-family:'Newsreader',serif; font-weight:400; font-size:15px; line-height:1.5; letter-spacing:0.01em; color:#FFFFFF; text-shadow:0 1px 12px rgba(0,0,0,0.45); text-wrap:balance;">{{ verse.t }}<span style="display:block; margin-top:8px; font-size:12px; letter-spacing:0.18em; text-transform:uppercase;">{{ verse.r }}</span></p>
+    </main>
+    <nav style="position:relative; display:flex; flex-wrap:wrap; justify-content:center; gap:12px clamp(14px, 4.5vw, 44px); padding:0 clamp(8px, 3vw, 24px) 44px;">
+      <sc-for list="{{ navFlat }}" as="n" hint-placeholder-count="3">
+        <a href="#" onClick="{{ n.go }}" style="color:#FFFFFF; font-family:'Newsreader',serif; font-size:clamp(10.5px, 2.9vw, 13px); letter-spacing:clamp(1.5px, 0.8vw, 4.2px); text-transform:uppercase; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.5);" style-hover="color:#FFFFFF; border-bottom:1px solid #FFFFFF;">{{ n.label }}</a>
+      </sc-for>
+    </nav>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isInner }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="{{ pageLabel }}" style="position:relative; min-height:100vh; background:#F3F2EE; color:#111111;">
+    <sc-if value="{{ isLineage }}" hint-placeholder-val="{{ false }}">
+      <dc-import name="Austrian Lineage" on-home="{{ goCover }}" hint-size="100%,calc(100vh - 70px)"></dc-import>
+    </sc-if>
+      <nav style="position:fixed; left:0; right:0; bottom:0; z-index:10; background:rgba(243,242,238,0.94); backdrop-filter:blur(6px); border-top:1px solid #D4D4D4; display:flex; flex-wrap:wrap; justify-content:center; gap:8px clamp(14px, 4.5vw, 44px); padding:14px clamp(8px, 3vw, 24px) 18px;">
+        <sc-for list="{{ navFlat }}" as="n" hint-placeholder-count="4">
+          <a href="#" onClick="{{ n.go }}" style="{{ n.barStyle }}" style-hover="color:#000000;">{{ n.label }}</a>
+        </sc-for>
+      </nav>
+    <sc-if value="{{ notLineage }}" hint-placeholder-val="{{ true }}">
+    <div style="position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:32px 40px 140px;">
+
+      <a href="#" onClick="{{ goCover }}" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#000000; text-decoration:none; cursor:pointer; text-align:center;">
+        <span style="font-family:'Poiret One',serif; font-weight:400; font-size:clamp(36px, 4vw, 56px); line-height:1; letter-spacing:0.05em; display:block; text-align:center; margin:0;">Rothbard</span>
+        <span style="display:block; text-align:center; margin:0; font-family:'Poiret One',serif; font-weight:400; font-size:clamp(11px, 1.05vw, 15px); line-height:1; letter-spacing:0.42em; padding-left:0.42em; text-transform:uppercase;">Capital</span>
+      </a>
+
+
+
+
+      <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+        <section style="padding-top:72px; display:flex; flex-direction:column; gap:56px;">
+          <div style="border-top:1px solid #D4D4D4; padding-top:20px;">
+            <p style="margin:0; font-family:'Newsreader',serif; font-size:22px; line-height:1.4; color:#111111; text-wrap:pretty;">Rothbard backs early-stage entrepreneurs bearing uncertainty to produce novel value for society.</p>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:32px; border-top:1px solid #D4D4D4; padding-top:20px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-family:'Figtree',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">General Partner</span>
+              <a href="https://x.com/waltjsmith" target="_blank" rel="noopener" style="font-family:'Newsreader',serif; font-size:22px; line-height:1.3; color:#000000; text-decoration:underline; text-decoration-color:#C9C7C1; text-decoration-thickness:1px; text-underline-offset:4px; align-self:flex-start;">Walt Smith</a>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-family:'Figtree',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">Venture Partners</span>
+              <a href="https://x.com/KipMock" target="_blank" rel="noopener" style="font-family:'Newsreader',serif; font-size:22px; line-height:1.3; color:#000000; text-decoration:underline; text-decoration-color:#C9C7C1; text-decoration-thickness:1px; text-underline-offset:4px; align-self:flex-start;">Kip Mock</a>
+              <a href="https://x.com/wsfoxley" target="_blank" rel="noopener" style="font-family:'Newsreader',serif; font-size:22px; line-height:1.3; color:#000000; text-decoration:underline; text-decoration-color:#C9C7C1; text-decoration-thickness:1px; text-underline-offset:4px; align-self:flex-start;">Will Foxley</a>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; border-top:1px solid #D4D4D4; padding-top:20px;">
+            <span style="font-family:'Figtree',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B;">Contact</span>
+            <a href="mailto:waltjsmith8@gmail.com" style="font-family:'Figtree',sans-serif; font-size:16px; color:#000000;">waltjsmith8@gmail.com</a>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ isPortfolio }}" hint-placeholder-val="{{ false }}">
+        <section style="padding-top:93px; display:flex; flex-direction:column; gap:40px;">
+          <sc-for list="{{ sectors }}" as="s" hint-placeholder-count="3">
+            <div>
+              <div style="display:flex; align-items:center; gap:16px;">
+                <span style="font-family:'Figtree',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#6B6B6B; white-space:nowrap;">{{ s.name }}</span>
+                <span style="flex:1; height:1px; background:#D4D4D4;"></span>
+              </div>
+              <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(min(100%, 460px), 1fr)); gap:48px 56px; margin-top:36px;">
+                <sc-for list="{{ s.cos }}" as="c" hint-placeholder-count="4">
+                  <div style="display:grid; grid-template-columns:168px minmax(0,1fr); gap:24px; align-items:start;">
+                    <div style="width:168px; height:168px; background:{{ c.tile }}; outline:{{ c.outline }};">
+                      <image-slot id="{{ c.slot }}" src="{{ c.logo }}" shape="rect" fit="cover" placeholder="{{ c.name }} logo" style="width:168px; height:168px;"></image-slot>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px; padding-top:6px;">
+                      <a href="{{ c.url }}" target="{{ c.target }}" rel="noopener" style="font-family:'Newsreader',serif; font-size:26px; line-height:1.1; color:#000000;">{{ c.name }}</a>
+                      <span style="font-family:'Newsreader',serif; font-size:17px; line-height:1.35; color:#111111;">{{ c.desc }}</span>
+                      <span style="font-family:'Figtree',sans-serif; font-size:13px; line-height:1.4; color:#555555;">{{ c.inv }}</span>
+                      <span style="font-family:'Newsreader',serif; font-size:10px; letter-spacing:0.32em; color:#6B6B6B;">{{ c.stage }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+
+
+
+      <footer style="margin-top:120px; padding-top:24px; border-top:1px solid {{ ink.rule }};">
+        <p style="margin:0; max-width:640px; font-family:'Figtree',sans-serif; font-size:11px; line-height:1.6; color:{{ ink.muted }};">This website is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any security or interest in any fund. Companies shown are a selection of investments made by the partners and are not representative of all investments.</p>
+      </footer>
+    </div>
+    </sc-if>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;taglineColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#F2EBDC&quot;,&quot;options&quot;:[&quot;#F2EBDC&quot;,&quot;#E9C46A&quot;,&quot;#CFE3F2&quot;,&quot;#C8553D&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Landing page&quot;}}">
+const VERSES=[{"r": "Psalm 115:3", "t": "But our God is in the heavens: he hath done whatsoever he hath pleased."}, {"r": "Proverbs 3:5", "t": "Trust in the LORD with all thine heart; and lean not unto thine own understanding."}, {"r": "Proverbs 16:9", "t": "A man's heart deviseth his way: but the LORD directeth his steps."}, {"r": "Ecclesiastes 9:10", "t": "Whatsoever thy hand findeth to do, do it with thy might."}, {"r": "Colossians 3:23", "t": "And whatsoever ye do, do it heartily, as to the Lord, and not unto men."}, {"r": "Proverbs 22:29", "t": "Seest thou a man diligent in his business? he shall stand before kings."}, {"r": "Ecclesiastes 11:6", "t": "In the morning sow thy seed, and in the evening withhold not thine hand."}, {"r": "Matthew 25:21", "t": "Well done, thou good and faithful servant: thou hast been faithful over a few things."}, {"r": "Proverbs 21:5", "t": "The thoughts of the diligent tend only to plenteousness."}, {"r": "Luke 14:28", "t": "For which of you, intending to build a tower, sitteth not down first, and counteth the cost?"}, {"r": "Galatians 6:9", "t": "And let us not be weary in well doing: for in due season we shall reap, if we faint not."}, {"r": "Philippians 4:13", "t": "I can do all things through Christ which strengtheneth me."}, {"r": "Joshua 1:9", "t": "Be strong and of a good courage; be not afraid, neither be thou dismayed."}, {"r": "Isaiah 40:31", "t": "They that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles."}, {"r": "Psalm 90:17", "t": "And establish thou the work of our hands upon us."}, {"r": "Proverbs 27:17", "t": "Iron sharpeneth iron; so a man sharpeneth the countenance of his friend."}, {"r": "James 1:5", "t": "If any of you lack wisdom, let him ask of God, that giveth to all men liberally."}, {"r": "Micah 6:8", "t": "Do justly, and to love mercy, and to walk humbly with thy God."}, {"r": "Romans 8:28", "t": "And we know that all things work together for good to them that love God."}, {"r": "2 Timothy 1:7", "t": "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind."}, {"r": "Psalm 127:1", "t": "Except the LORD build the house, they labour in vain that build it."}, {"r": "Proverbs 11:24", "t": "There is that scattereth, and yet increaseth."}, {"r": "Matthew 7:24", "t": "Whosoever heareth these sayings of mine, and doeth them, I will liken him unto a wise man, which built his house upon a rock."}, {"r": "Hebrews 11:1", "t": "Now faith is the substance of things hoped for, the evidence of things not seen."}, {"r": "Proverbs 4:7", "t": "Wisdom is the principal thing; therefore get wisdom."}, {"r": "Psalm 37:5", "t": "Commit thy way unto the LORD; trust also in him; and he shall bring it to pass."}, {"r": "2 Corinthians 9:7", "t": "God loveth a cheerful giver."}, {"r": "Exodus 20:15", "t": "Thou shalt not steal."}, {"r": "Genesis 1:28", "t": "Be fruitful, and multiply, and replenish the earth, and subdue it."}, {"r": "Ecclesiastes 3:1", "t": "To every thing there is a season, and a time to every purpose under the heaven."}, {"r": "Psalm 118:24", "t": "This is the day which the LORD hath made; we will rejoice and be glad in it."}];
+
+class Component extends DCLogic {
+  shuffled(arr) { if (!this._order) { this._order = arr.map((_, i) => i); for (let i = this._order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [this._order[i], this._order[j]] = [this._order[j], this._order[i]]; } } return this._order.map(i => arr[i]); }
+  state = { page: (['about','portfolio','lineage'].find(k => location.pathname.replace(/\/+$/,'').replace(/\.html$/,'').endsWith('/'+k))) || 'cover', subscribed: false };
+  componentDidMount() { window.addEventListener('popstate', () => { const k = ['about','portfolio','lineage'].find(k => location.pathname.replace(/\/+$/,'').replace(/\.html$/,'').endsWith('/'+k)); this.setState({ page: k || 'cover' }); }); }
+  go(p) { return (e) => { e && e.preventDefault(); if (p === 'writing') { window.open('https://substack.com/@waltsmith/posts', '_blank', 'noopener'); return; } history.pushState(null, '', p === 'cover' ? '/' : '/' + p); this.setState({ page: p }); window.scrollTo(0, 0); }; }
+  renderVals() {
+    const p = this.state.page;
+    const L = { about: 'About', portfolio: 'Portfolio', lineage: 'Lineage', writing: 'Writing' };
+    if (p === 'contact' || p === 'newsletter' || p === 'walt') { setTimeout(() => this.go('about')(), 0); }
+    const link = (k) => ({ label: L[k], go: this.go(k),
+      style: `font-family:'Newsreader',serif; font-size:13px; letter-spacing:0.28em; text-transform:uppercase; padding:6px 0; color:${p === k ? '#000000' : '#8A8A8A'}; ${p === k ? 'font-weight:500;' : ''}` });
+    const cols = [['about'], ['portfolio']];
+    const navCols = cols.map((items, i) => ({
+      items: items.map(link),
+      style: { display: 'flex', flexDirection: 'column', gap: '4px', padding: '0 20px', borderLeft: i ? '1px solid #D4D4D4' : 'none', paddingLeft: i ? '20px' : '0' }
+    }));
+    navCols.forEach(c => c.items.forEach(it => { it.style = Object.fromEntries(it.style.split(';').filter(s => s.trim()).map(s => { const [k, ...v] = s.split(':'); return [k.trim().replace(/-([a-z])/g, (_, ch) => ch.toUpperCase()), v.join(':').trim()]; })); }));
+    const LOGOS = {"Guardian Intelligence Inc.":"./assets/logos/guardian-new.png","Pearl Research":"./assets/logos/pearl-dots.jpg","Seed Oil Scout":"./assets/logos/sos.jpg","Rainmaker":"./assets/logos/rainmaker-tile.svg","Terranova":"./assets/logos/terranova.jpg","Ardent":"./assets/logos/ardent.jpg","EdgeRun Industries":"./assets/logos/edgerun.jpg","NOAT":"./assets/logos/noat.jpg","Synteq Digital":"./assets/logos/synteq.png"};
+    const co = (name, desc, inv, stage, url) => ({ name, desc, inv, stage, logo: LOGOS[name] || '', tile: '#F0F0F0', outline: name === 'NOAT' ? '1px solid #D6D4CE' : 'none', url: url || '#', target: url ? '_blank' : '_self', slot: 'logo-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-') });
+    const sectors = [
+      { name: 'HISTORIC INVESTMENTS', cos: [
+        co('Guardian Intelligence Inc.', 'Personal and secure LLMs.', '', '', 'https://gwern.net/guardian-angel'),
+        co('Rainmaker', 'Making every winter El Niño.', '', '', 'https://www.rainmaker.com/'),
+        co('Ardent', 'The flying car company.', '', '', 'https://x.com/flyardent'),
+        co('Terranova', 'Building a new continent.', '', '', 'https://www.terranova.inc/'),
+        co('NOAT', 'Artisan microplastic-free nicotine.', '', ''),
+        co('Pearl Research', 'Inference engine.', '', '', 'https://pearlresearch.ai'),
+        co('Synteq Digital', 'American neocloud.', '', ''),
+        co('EdgeRun Industries', 'Exoskeletons for humans.', '', '') ] }
+    ];
+    const _d=new Date(), _n=Math.floor((Date.UTC(_d.getFullYear(),_d.getMonth(),_d.getDate())-Date.UTC(2026,0,1))/864e5);
+    const verse=VERSES[((_n%VERSES.length)+VERSES.length)%VERSES.length];
+    return {
+      verse,
+      taglineColor: this.props.taglineColor ?? '#F2EBDC',
+      isCover: p === 'cover', isInner: p !== 'cover',
+      aboutPhoto: false, notAbout: p !== 'about',
+      ink: false
+        ? { mark: '#FFFFFF', body: '#FFFFFF', accent: '#FFFFFF', rule: 'rgba(255,255,255,0.4)', muted: 'rgba(255,255,255,0.8)' }
+        : { mark: '#000000', body: '#111111', accent: '#000000', rule: '#D4D4D4', muted: '#6B6B6B' },
+      isAbout: p === 'about', isLineage: p === 'lineage', notLineage: p !== 'lineage', isContact: p === 'contact', isPortfolio: p === 'portfolio',
+      pageLabel: L[p] || 'Cover',
+      navFlat: ['about', 'portfolio', 'lineage'].map(k => ({ label: L[k], go: this.go(k), barStyle: { color: p === k ? '#000000' : '#111111', fontFamily: "'Newsreader',serif", fontSize: 'clamp(10.5px, 2.9vw, 13px)', letterSpacing: 'clamp(1.5px, 0.8vw, 4.2px)', textTransform: 'uppercase', padding: '10px 0', borderBottom: p === k ? '1px solid #000000' : '1px solid transparent' } })),
+      navCols, sectors, goCover: this.go('cover'),
+      subscribed: this.state.subscribed, notSubscribed: !this.state.subscribed,
+      subscribe: (e) => { e.preventDefault(); this.setState({ subscribed: true }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
