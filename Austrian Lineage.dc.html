@@ -157,7 +157,7 @@ class Component extends DCLogic {
   onKey = (e) => { if (e.key === 'Escape' && this.state.open) this.setState({open:false}); };
   onResize = () => {
     this.setState({vw:window.innerWidth, vh:window.innerHeight});
-    requestAnimationFrame(() => { const t = document.querySelector('[data-tree]'); if (t) { const top = t.getBoundingClientRect().top + window.scrollY; if (Math.abs(top - (this.state.treeTop || 0)) > 1) this.setState({treeTop: top}); } });
+    requestAnimationFrame(() => { const t = document.querySelector('[data-tree]'); if (t) { const ip = t.querySelector("p"); const top = (ip ? ip.getBoundingClientRect().bottom + 28 : t.getBoundingClientRect().top) + window.scrollY; if (Math.abs(top - (this.state.treeTop || 0)) > 1) this.setState({treeTop: top}); } });
   };
   componentWillUnmount(){ window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); }
   componentDidMount(){
@@ -182,8 +182,8 @@ class Component extends DCLogic {
     const narrow = (this.state.vw || 1440) < 700; const mobile = true;
     // Mobile: size rows so all six generations fit between the tree top and the fixed bottom nav.
     const connPx = mobile ? 10 : 16;
-    const avail = (this.state.vh || 844) - 70 - 10 - (this.state.treeTop || 250) - 28;
-    const mRow = Math.max(42, Math.min(68, Math.floor((avail - 5*connPx) / 6)));
+    const avail = (this.state.vh || 844) - 70 - 10 - (this.state.treeTop || 330) - 28;
+    const mRow = Math.max(34, Math.min(68, Math.floor((avail - 5*connPx) / 6)));
     const showPanel = false;
     const treeW = vw - 80 - 44 - (Math.min(320, Math.max(240, vw*0.24)) + 32);
     const rowH = mobile ? mRow : 138;
