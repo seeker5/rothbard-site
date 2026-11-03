@@ -147,7 +147,7 @@ class Component extends DCLogic {
     const co = (name, desc, inv, stage, url) => ({ name, desc, inv, stage, logo: LOGOS[name] || '', tile: '#F0F0F0', outline: name === 'NOAT' ? '1px solid #D6D4CE' : 'none', url: url || '#', target: url ? '_blank' : '_self', slot: 'logo-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-') });
     const sectors = [
       { name: 'HISTORIC INVESTMENTS', cos: [
-        co('Guardian Intelligence Inc.', 'Personal and secure LLMs.', '', '', 'https://gwern.net/guardian-angel'),
+        co('Stealth', 'Personal and secure LLMs.', '', ''),
         co('Rainmaker', 'Making every winter El Niño.', '', '', 'https://www.rainmaker.com/'),
         co('Ardent', 'The flying car company.', '', '', 'https://x.com/flyardent'),
         co('Terranova', 'Building a new continent.', '', '', 'https://www.terranova.inc/'),
