@@ -15,7 +15,7 @@
   function dpoly(c, x) { return (3 * c[0] * x + 2 * c[1]) * x + c[2]; }
 
   function loadScene() {
-    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=2').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (S) { SCENE = buildLines(S); return SCENE; });
     return scenePromise;
   }
@@ -64,16 +64,20 @@
 
   function build(host) {
     var S = SCENE.S, SP = S.sprite;
-    var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + S.W + 'px;height:' + S.H + 'px;');
+    var TOPX = S.TOPX || 0, HE = S.HE || S.H;
+    var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + S.W + 'px;height:' + HE + 'px;');
     var imgs = [];
-    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src, decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
-    stage.appendChild(img('cover-alps-plate.jpg', '', S.W, S.H));
+    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=2', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
+    // plate + drifting sky are in extended-canvas coords (photo starts at y=TOPX)
+    stage.appendChild(img('cover-alps-plate.jpg', '', S.W, HE));
     var sky = img('sky-drift.webp', 'left:' + (-S.PAD) + 'px;will-change:transform;');
     stage.appendChild(sky);
-    stage.appendChild(img('sky-static.webp'));
+    var inner = el('div', 'position:absolute;left:0;top:' + TOPX + 'px;width:' + S.W + 'px;height:' + S.H + 'px;');
+    stage.appendChild(inner);
+    inner.appendChild(img('sky-static.webp'));
     var chairsEl = el('div', 'position:absolute;left:0;top:0;');
-    stage.appendChild(chairsEl);
-    stage.appendChild(img('tower-occluder.png', 'left:' + S.occ[0] + 'px;top:' + S.occ[1] + 'px;'));
+    inner.appendChild(chairsEl);
+    inner.appendChild(img('tower-occluder.png', 'left:' + S.occ[0] + 'px;top:' + S.occ[1] + 'px;'));
     var chairs = [];
     Object.keys(SCENE.lines).forEach(function (name) {
       var L = SCENE.lines[name];
@@ -90,8 +94,8 @@
     var m = { host: host, wrap: wrap, stage: stage, sky: sky, chairs: chairs, ready: false };
     m.layout = function () {
       var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return;
-      var s = Math.max(W / S.W, H / S.H);
-      stage.style.transform = 'translate(' + ((W - S.W * s) * 0.5) + 'px,' + ((H - S.H * s) * 0.12) + 'px) scale(' + s + ')';
+      var s = Math.max(W / S.W, H / HE);   // same as object-fit:cover; object-position:center 12% on cover-alps-ext.jpg
+      stage.style.transform = 'translate(' + ((W - S.W * s) * 0.5) + 'px,' + ((H - HE * s) * 0.12) + 'px) scale(' + s + ')';
     };
     m.ro = window.ResizeObserver ? new ResizeObserver(m.layout) : null;
     if (m.ro) m.ro.observe(host); else window.addEventListener('resize', m.layout);
