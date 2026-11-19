@@ -15,7 +15,7 @@
   function dpoly(c, x) { return (3 * c[0] * x + 2 * c[1]) * x + c[2]; }
 
   function loadScene() {
-    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=5').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=6').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (S) { SCENE = buildLines(S); return SCENE; });
     return scenePromise;
   }
@@ -67,7 +67,7 @@
     var TOPX = S.TOPX || 0, HE = S.HE || S.H, EX = S.EX || 0, WE = S.WE || S.W;
     var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + WE + 'px;height:' + HE + 'px;');
     var imgs = [];
-    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=5', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
+    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=6', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
     // plate + drifting sky are in extended-canvas coords (photo starts at y=TOPX)
     stage.appendChild(img('cover-alps-plate.jpg', '', WE, HE));
     var sky = img('sky-drift.webp', 'left:' + (-S.PAD) + 'px;will-change:transform;');
@@ -77,7 +77,7 @@
     inner.appendChild(img('sky-static.webp'));
     // chairs + tower occluder are drawn as vectors on a device-pixel canvas above the stage (crisp at any scale)
     var occImg = img('tower-occluder.png');
-    var spLt = img('chair-light.png'), spDk = img('chair-dark.png');
+    var spLt = img('chair-light.png');
     var chairs = [];
     Object.keys(SCENE.lines).forEach(function (name) {
       var L = SCENE.lines[name];
@@ -86,7 +86,7 @@
     var cv = el('canvas', 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;');
     var wrap = el('div', 'position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .6s ease;');
     wrap.appendChild(stage); wrap.appendChild(cv); host.appendChild(wrap);
-    var m = { host: host, wrap: wrap, stage: stage, sky: sky, chairs: chairs, cv: cv, ctx: cv.getContext('2d'), occ: occImg, spLt: spLt, spDk: spDk, ready: false };
+    var m = { host: host, wrap: wrap, stage: stage, sky: sky, chairs: chairs, cv: cv, ctx: cv.getContext('2d'), occ: occImg, spLt: spLt, ready: false };
     m.layout = function () {
       var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return;
       // Up to 16:10 this is cover-fit of the photo width; wider screens keep the 16:10 vertical framing
@@ -137,7 +137,13 @@
       g.drawImage(src, 0, 0, sw, sh, 1, 1, SP.w * d, SP.h * d);
       return c;
     }
-    return { d: d, lt: make(m.spLt), dk: make(m.spDk), ax: SP.ax * d + 1, ay: SP.ay * d + 1 };
+    var lt = make(m.spLt), dk = document.createElement('canvas');   // backlit version: same clean cutout, darkened
+    dk.width = lt.width; dk.height = lt.height;
+    var dg = dk.getContext('2d'); dg.drawImage(lt, 0, 0);
+    try { var id = dg.getImageData(0, 0, dk.width, dk.height), px = id.data;
+      for (var i = 0; i < px.length; i += 4) { px[i] *= 0.42; px[i + 1] *= 0.43; px[i + 2] *= 0.45; }
+      dg.putImageData(id, 0, 0); } catch (e) { dk = lt; }
+    return { d: d, lt: lt, dk: dk, ax: SP.ax * d + 1, ay: SP.ay * d + 1 };
   }
 
   function frame(m, t) {
@@ -154,12 +160,10 @@
       var s = (L.s0 + c.off + 3.0 * t) % L.loop; if (s < 0) s += L.loop;
       c.sx = null; if (s > L.len) continue;                     // parked off-image
       var x = L.xOfS(s); if (x < x0 || x > x1) continue;
-      var y = L.y(x), w = toneAt(L.tone, x);
+      var y = L.y(x);
       var px = v.dpr * (v.ox + x * v.s) - sp.ax, py = v.dpr * (v.oy + y * v.s) - sp.ay;
-      var ad = Math.min(1, 2 * w), al = Math.min(1, 2 * (1 - w));
-      if (al > 0) { g.globalAlpha = al; g.drawImage(sp.lt, px, py); }
-      if (ad > 0) { g.globalAlpha = ad; g.drawImage(sp.dk, px, py); }
-      g.globalAlpha = 1;
+      g.drawImage(sp.lt, px, py);     // one clean photo cutout for every chair; against the sky it reads backlit
+      var w = toneAt(L.tone, x); if (w > 0) { g.globalAlpha = w; g.drawImage(sp.dk, px, py); g.globalAlpha = 1; }
       c.sx = v.ox + x * v.s; c.sy = v.oy + y * v.s; c.sk = sp.d / v.dpr;
     }
     g.setTransform(a, 0, 0, a, v.dpr * v.ox, v.dpr * v.oy);
