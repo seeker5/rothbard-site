@@ -15,7 +15,7 @@
   function dpoly(c, x) { return (3 * c[0] * x + 2 * c[1]) * x + c[2]; }
 
   function loadScene() {
-    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=7').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=8').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (S) { SCENE = buildLines(S); return SCENE; });
     return scenePromise;
   }
@@ -67,7 +67,7 @@
     var TOPX = S.TOPX || 0, HE = S.HE || S.H, EX = S.EX || 0, WE = S.WE || S.W;
     var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + WE + 'px;height:' + HE + 'px;');
     var imgs = [];
-    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=7', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
+    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=8', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
     // plate + drifting sky are in extended-canvas coords (photo starts at y=TOPX)
     stage.appendChild(img('cover-alps-plate.jpg', '', WE, HE));
     var sky = img('sky-drift.webp', 'left:' + (-S.PAD) + 'px;will-change:transform;');
