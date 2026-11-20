@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
-<script src="./assets/cover-anim/cover-anim.js?v=10" defer></script>
+<script src="./assets/cover-anim/cover-anim.js?v=11" defer></script>
 <script>
 /* Lineage portraits: preload right away on /lineage, otherwise warm the cache when the browser is idle */
 (function () {
@@ -14,7 +14,9 @@
     K.forEach(function (k) { var i = new Image(); i.decoding = 'async'; i.src = './assets/lineage/' + k + '.webp'; });
   }
   if (onLin) K.forEach(function (k) { var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = './assets/lineage/' + k + '.webp'; document.head.appendChild(l); });
-  else window.addEventListener('load', function () { (window.requestIdleCallback || function (f) { setTimeout(f, 1500); })(warm, { timeout: 4000 }); });
+  var onCover = !/\/(about|portfolio|lineage)(\.html)?\/?$/.test(location.pathname);
+  if (onCover) { var c = document.createElement('link'); c.rel = 'preload'; c.as = 'image'; c.href = './assets/cover-alps-wide.jpg'; document.head.appendChild(c); }
+  if (!onLin) window.addEventListener('load', function () { (window.requestIdleCallback || function (f) { setTimeout(f, 1500); })(warm, { timeout: 4000 }); });
 })();
 </script>
 </head>
@@ -46,7 +48,7 @@
 
 <sc-if value="{{ isCover }}" hint-placeholder-val="{{ true }}">
   <div data-screen-label="Cover" style="position:relative; height:100vh; min-height:560px; overflow:hidden; background:#1a1a1a; color:#FFFFFF; display:flex; flex-direction:column;">
-    <div style="position:absolute; inset:0; overflow:hidden; container-type:size;"><img src="./assets/cover-alps-wide.jpg" alt=""></div>
+    <div style="position:absolute; inset:0; overflow:hidden; container-type:size;"><img src="{{ coverImg }}" alt=""></div>
     <div data-cover-anim="1" style="position:absolute; inset:0; overflow:hidden; pointer-events:none;"></div>
     <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.1) 65%, rgba(0,0,0,0.5) 100%); pointer-events:none;"></div>
     <header style="position:relative; display:flex; justify-content:center; padding:32px 40px;">
@@ -186,7 +188,7 @@ class Component extends DCLogic {
     return {
       verse,
       taglineColor: this.props.taglineColor ?? '#F2EBDC',
-      isCover: p === 'cover', isInner: p !== 'cover',
+      isCover: p === 'cover', isInner: p !== 'cover', coverImg: './assets/cover-alps-wide.jpg',
       aboutPhoto: false, notAbout: p !== 'about',
       ink: false
         ? { mark: '#FFFFFF', body: '#FFFFFF', accent: '#FFFFFF', rule: 'rgba(255,255,255,0.4)', muted: 'rgba(255,255,255,0.8)' }
