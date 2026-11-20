@@ -15,7 +15,7 @@
   function dpoly(c, x) { return (3 * c[0] * x + 2 * c[1]) * x + c[2]; }
 
   function loadScene() {
-    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=8').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=10').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (S) { SCENE = buildLines(S); return SCENE; });
     return scenePromise;
   }
@@ -67,7 +67,7 @@
     var TOPX = S.TOPX || 0, HE = S.HE || S.H, EX = S.EX || 0, WE = S.WE || S.W;
     var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + WE + 'px;height:' + HE + 'px;');
     var imgs = [];
-    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=8', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
+    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=10', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
     // plate + drifting sky are in extended-canvas coords (photo starts at y=TOPX)
     stage.appendChild(img('cover-alps-plate.jpg', '', WE, HE));
     var sky = img('sky-drift.webp', 'left:' + (-S.PAD) + 'px;will-change:transform;');
@@ -77,7 +77,7 @@
     inner.appendChild(img('sky-static.webp'));
     // chairs + tower occluder are drawn as vectors on a device-pixel canvas above the stage (crisp at any scale)
     var occImg = img('tower-occluder.png');
-    var spLt = img('chair-light.png'), spSk = img('chair-sky.png');
+    var spLt = img('chair-light.png');
     var chairs = [];
     Object.keys(SCENE.lines).forEach(function (name) {
       var L = SCENE.lines[name];
@@ -86,7 +86,7 @@
     var cv = el('canvas', 'position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;');
     var wrap = el('div', 'position:absolute;inset:0;overflow:hidden;opacity:0;transition:opacity .6s ease;');
     wrap.appendChild(stage); wrap.appendChild(cv); host.appendChild(wrap);
-    var m = { host: host, wrap: wrap, stage: stage, sky: sky, chairs: chairs, cv: cv, ctx: cv.getContext('2d'), occ: occImg, spLt: spLt, spSk: spSk, ready: false };
+    var m = { host: host, wrap: wrap, stage: stage, sky: sky, chairs: chairs, cv: cv, ctx: cv.getContext('2d'), occ: occImg, spLt: spLt, ready: false };
     m.layout = function () {
       var W = host.clientWidth, H = host.clientHeight; if (!W || !H) return;
       // Up to 16:10 this is cover-fit of the photo width; wider screens keep the 16:10 vertical framing
@@ -137,21 +137,16 @@
       g.drawImage(src, 0, 0, sw, sh, 1, 1, SP.w * d, SP.h * d);
       return c;
     }
-    // shade levels: forest look (photo cutout) -> backlit sky look (smooth near-black silhouette), mixed per pixel
-    // in premultiplied space so the antialiased edges stay intact; picked by position, never two sprites at once
-    var lt = make(m.spLt), sk = make(m.spSk), N = 32, lv = [];
+    // shade levels: the one real chair cutout everywhere; against the sky only its colour is darkened a little
+    // (alpha untouched, so edges stay smooth); picked by position
+    var lt = make(m.spLt), N = 32, lv = [];
     var W_ = lt.width, H_ = lt.height;
     try {
-      var A = lt.getContext('2d').getImageData(0, 0, W_, H_).data, B = sk.getContext('2d').getImageData(0, 0, W_, H_).data;
+      var A = lt.getContext('2d').getImageData(0, 0, W_, H_).data;
       for (var j = 0; j <= N; j++) {
-        var f = j / N, c = document.createElement('canvas'); c.width = W_; c.height = H_;
+        var f = 1 - 0.3 * j / N, c = document.createElement('canvas'); c.width = W_; c.height = H_;
         var cg = c.getContext('2d'), id = cg.createImageData(W_, H_), o = id.data;
-        for (var i = 0; i < o.length; i += 4) {
-          var a1 = A[i + 3] / 255 * (1 - f), a2 = B[i + 3] / 255 * f, al = a1 + a2;
-          if (al <= 0) continue;
-          o[i] = (A[i] * a1 + B[i] * a2) / al; o[i + 1] = (A[i + 1] * a1 + B[i + 1] * a2) / al; o[i + 2] = (A[i + 2] * a1 + B[i + 2] * a2) / al;
-          o[i + 3] = Math.min(255, al * 255);
-        }
+        for (var i = 0; i < o.length; i += 4) { o[i] = A[i] * f; o[i + 1] = A[i + 1] * f; o[i + 2] = A[i + 2] * f; o[i + 3] = A[i + 3]; }
         cg.putImageData(id, 0, 0); lv.push(c);
       }
     } catch (e) { lv = [lt]; N = 0; }
