@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <script src="./assets/cover-anim/cover-anim.js?v=10" defer></script>
+<script>
+/* Lineage portraits: preload right away on /lineage, otherwise warm the cache when the browser is idle */
+(function () {
+  var K = ['menger','wieser','bb','mises','schumpeter','hayek','morgenstern','lachmann','rothbard','kirzner','hoppe','sennholz','herbener','walter'], onLin = /\/lineage(\.html)?\/?$/.test(location.pathname);
+  function warm() {
+    var l = document.createElement('link'); l.rel = 'prefetch'; l.href = './Austrian%20Lineage.dc.html'; document.head.appendChild(l);
+    K.forEach(function (k) { var i = new Image(); i.decoding = 'async'; i.src = './assets/lineage/' + k + '.webp'; });
+  }
+  if (onLin) K.forEach(function (k) { var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = './assets/lineage/' + k + '.webp'; document.head.appendChild(l); });
+  else window.addEventListener('load', function () { (window.requestIdleCallback || function (f) { setTimeout(f, 1500); })(warm, { timeout: 4000 }); });
+})();
+</script>
 </head>
 <body>
 <x-dc>
@@ -44,11 +56,11 @@
       </div>
     </header>
     <main style="position:relative; flex:1; display:flex; align-items:center; justify-content:center; padding:0 24px;">
-      <p style="margin:0; max-width:560px; text-align:center; font-family:'Newsreader',serif; font-weight:400; font-size:15px; line-height:1.5; letter-spacing:0.01em; color:#FFFFFF; text-shadow:0 1px 12px rgba(0,0,0,0.45); text-wrap:balance;">{{ verse.t }}<span style="display:block; margin-top:8px; font-size:12px; letter-spacing:0.18em; text-transform:uppercase;">{{ verse.r }}</span></p>
+      <p style="margin:0; max-width:560px; text-align:center; font-family:'Newsreader',serif; font-weight:400; font-size:15px; line-height:1.5; letter-spacing:0.01em; color:#FFFFFF; text-shadow:0 1px 12px rgba(0,0,0,0.45); text-wrap:balance;">{{ verse.t }}<span style="display:block; margin-top:8px; font-size:12px; letter-spacing:0.18em; text-transform:uppercase; padding-left:0.18em;">{{ verse.r }}</span></p>
     </main>
     <nav style="position:relative; display:flex; flex-wrap:wrap; justify-content:center; gap:12px clamp(14px, 4.5vw, 44px); padding:0 clamp(8px, 3vw, 24px) 44px;">
       <sc-for list="{{ navFlat }}" as="n" hint-placeholder-count="3">
-        <a href="#" onClick="{{ n.go }}" style="color:#FFFFFF; font-family:'Newsreader',serif; font-size:clamp(10.5px, 2.9vw, 13px); letter-spacing:clamp(1.5px, 0.8vw, 4.2px); text-transform:uppercase; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.5);" style-hover="color:#FFFFFF; border-bottom:1px solid #FFFFFF;">{{ n.label }}</a>
+        <a href="#" onClick="{{ n.go }}" style="color:#FFFFFF; font-family:'Newsreader',serif; font-size:clamp(10.5px, 2.9vw, 13px); letter-spacing:clamp(1.5px, 0.8vw, 4.2px); text-transform:uppercase; padding:10px 0 10px clamp(1.5px, 0.8vw, 4.2px); border-bottom:1px solid rgba(255,255,255,0.5);" style-hover="color:#FFFFFF; border-bottom:1px solid #FFFFFF;">{{ n.label }}</a>
       </sc-for>
     </nav>
   </div>

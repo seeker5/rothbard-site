@@ -40,7 +40,7 @@ a:hover{color:#555555;}
               <div data-person="{{ p.key }}" onMouseEnter="{{ p.hover }}" onClick="{{ p.tap }}" style="position:absolute; left:{{ p.left }}; top:0; bottom:0; width:{{ m.personW }}; max-width:180px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; text-align:center; cursor:pointer;">
                 <div style="width:{{ portrait }}; height:{{ portrait }}; flex-shrink:0; border-radius:50%; overflow:hidden; border:{{ p.border }}; box-shadow:{{ p.shadow }}; background:#E4E2DC; display:flex; align-items:center; justify-content:center; font-family:'Newsreader',serif; font-size:14px; color:#6B6B6B;">
                   <sc-if value="{{ p.hasImg }}" hint-placeholder-val="{{ false }}">
-                    <div role="img" aria-label="{{ p.name }}" style="width:100%; height:100%; background-image:{{ p.bg }}; background-size:cover; background-position:50% 20%; filter:{{ p.filter }};"></div>
+                    <img src="{{ p.img }}" alt="{{ p.name }}" width="120" height="150" decoding="async" loading="eager" fetchpriority="high" style="width:100%; height:100%; display:block; object-fit:cover; object-position:50% 20%; filter:{{ p.filter }};">
                   </sc-if>
                   <sc-if value="{{ p.noImg }}" hint-placeholder-val="{{ true }}">
                     <span>{{ p.initials }}</span>
@@ -153,7 +153,8 @@ const GENS = [
 ];
 const INK='#9A9A9A', RED='#000000';
 class Component extends DCLogic {
-  state = { sel:'menger', imgs:{}, open:false };
+  // portraits: local ~2x-display WebPs (were full-size Wikipedia originals fetched at runtime)
+  state = { sel:'menger', imgs:{menger:'./assets/lineage/menger.webp',wieser:'./assets/lineage/wieser.webp',bb:'./assets/lineage/bb.webp',mises:'./assets/lineage/mises.webp',schumpeter:'./assets/lineage/schumpeter.webp',hayek:'./assets/lineage/hayek.webp',morgenstern:'./assets/lineage/morgenstern.webp',lachmann:'./assets/lineage/lachmann.webp',rothbard:'./assets/lineage/rothbard.webp',kirzner:'./assets/lineage/kirzner.webp',hoppe:'./assets/lineage/hoppe.webp',sennholz:'./assets/lineage/sennholz.webp',herbener:'./assets/lineage/herbener.webp',walter:'./assets/lineage/walter.webp'}, open:false };
   onKey = (e) => { if (e.key === 'Escape' && this.state.open) this.setState({open:false}); };
   onResize = () => {
     this.setState({vw:window.innerWidth, vh:window.innerHeight});
@@ -167,14 +168,6 @@ class Component extends DCLogic {
       const box = el && el.closest('[data-tree]'); if (box) { const r = el.getBoundingClientRect(), b = box.getBoundingClientRect(); box.scrollTop = Math.max(0, box.scrollTop + (r.top - b.top) + 60 - box.clientHeight / 2); }
     }, 350);
     this.onResize(); window.addEventListener('resize', this.onResize); window.addEventListener('keydown', this.onKey);
-    Object.entries(P).forEach(([k,p])=>{
-      if(p.img){ this.setState(s=>({imgs:{...s.imgs,[k]:p.img}})); return; }
-      if(!p.wiki) return;
-      fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(p.wiki))
-        .then(r=>r.ok?r.json():null)
-        .then(d=>{ const u=d && (d.originalimage?.source || d.thumbnail?.source); if(u) this.setState(s=>({imgs:{...s.imgs,[k]:u}})); })
-        .catch(()=>{});
-    });
   }
   renderVals(){
     const {sel, imgs, open} = this.state;
