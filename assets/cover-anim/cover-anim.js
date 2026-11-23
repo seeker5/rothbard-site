@@ -9,13 +9,14 @@
   var BASE = (document.currentScript && document.currentScript.src) ? document.currentScript.src.replace(/[^\/]*$/, '') : './assets/cover-anim/';
   var SCENE = null, scenePromise = null;
   var mount = null;            // { host, stage, sky, chairs, ro }
+  var PHONE = window.matchMedia && matchMedia('(max-width: 700px)');
   var raf = 0, last = 0, T = 0; // T: running animation time (s), only advances while visible
 
   function poly(c, x) { return ((c[0] * x + c[1]) * x + c[2]) * x + c[3]; }
   function dpoly(c, x) { return (3 * c[0] * x + 2 * c[1]) * x + c[2]; }
 
   function loadScene() {
-    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=12').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=13').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (S) { SCENE = buildLines(S); return SCENE; });
     return scenePromise;
   }
@@ -64,13 +65,16 @@
 
   function build(host) {
     var S = SCENE.S, SP = S.sprite;
-    var TOPX = S.TOPX || 0, HE = S.HE || S.H, EX = S.EX || 0, WE = S.WE || S.W;
+    var phone = PHONE && PHONE.matches;
+    var TOPX = (S.TOPX || 0) + (phone ? (S.TOY || 0) : 0);
+    var HE = (phone && S.HET) ? S.HET : (S.HE || S.H), EX = S.EX || 0, WE = S.WE || S.W;
     var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + WE + 'px;height:' + HE + 'px;');
     var imgs = [];
-    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=12', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
+    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=13', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
     // plate + drifting sky are in extended-canvas coords (photo starts at y=TOPX)
-    stage.appendChild(img('cover-alps-plate.jpg', '', WE, HE));
-    var sky = img('sky-drift.webp', 'left:' + (-S.PAD) + 'px;will-change:transform;');
+    // phones use the taller canvas so a zoomed-out frame still fills the screen with no empty edges
+    stage.appendChild(img(phone ? 'cover-alps-plate-tall.jpg' : 'cover-alps-plate.jpg', '', WE, HE));
+    var sky = img(phone ? 'sky-drift-tall.webp' : 'sky-drift.webp', 'left:' + (-S.PAD) + 'px;will-change:transform;');
     stage.appendChild(sky);
     var inner = el('div', 'position:absolute;left:' + EX + 'px;top:' + TOPX + 'px;width:' + S.W + 'px;height:' + S.H + 'px;');
     stage.appendChild(inner);
@@ -207,6 +211,7 @@
   }
 
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+  if (PHONE && PHONE.addEventListener) PHONE.addEventListener('change', function () { teardown(); scan(); });
   var pending = false;
   new MutationObserver(function () {
     if (pending) return; pending = true;

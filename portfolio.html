@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
-<script src="./assets/cover-anim/cover-anim.js?v=12" defer></script>
+<script src="./assets/cover-anim/cover-anim.js?v=13" defer></script>
 <script>
 /* Lineage portraits: preload right away on /lineage, otherwise warm the cache when the browser is idle */
 (function () {
@@ -15,7 +15,7 @@
   }
   if (onLin) K.forEach(function (k) { var l = document.createElement('link'); l.rel = 'preload'; l.as = 'image'; l.href = './assets/lineage/' + k + '.webp'; document.head.appendChild(l); });
   var onCover = !/\/(about|portfolio|lineage)(\.html)?\/?$/.test(location.pathname);
-  if (onCover) { var c = document.createElement('link'); c.rel = 'preload'; c.as = 'image'; c.href = './assets/cover-alps-wide.jpg'; document.head.appendChild(c); }
+  if (onCover) { var c = document.createElement('link'); c.rel = 'preload'; c.as = 'image'; c.href = matchMedia('(max-width: 700px)').matches ? './assets/cover-alps-tall.jpg' : './assets/cover-alps-wide.jpg'; document.head.appendChild(c); }
   if (!onLin) window.addEventListener('load', function () { (window.requestIdleCallback || function (f) { setTimeout(f, 1500); })(warm, { timeout: 4000 }); });
 })();
 </script>
@@ -33,14 +33,24 @@
     a { color: #000000; text-decoration: none; }
     a:hover { color: #000000; }
     /* Still cover (2890x1876 canvas; photo is the middle 1926 columns). Up to 16:10 it fills the photo width;
-       wider screens keep the 16:10 vertical framing and show the side extensions. Same formula as cover-anim.js. */
-    img[src$="cover-alps-wide.jpg"] { position:absolute; inset:0; width:100%; height:100%; max-width:none; object-fit:cover; object-position:center 12%; }
+       wider screens keep the 16:10 vertical framing and show the side extensions. Same formula as cover-anim.js.
+       Phones (max-width:700px) use the taller 2354-row canvas so the frame can zoom out and still fill the screen. */
+    .cover-still { position:absolute; inset:0; width:100%; height:100%; max-width:none; object-fit:cover; object-position:center 12%; }
     @supports (width: 1cqw) {
-      img[src$="cover-alps-wide.jpg"] {
+      .cover-still {
         --s: max(min(100cqw / 1926, 100cqh / 1204), 100cqh / 1876, 100cqw / 2890);
         inset:auto; object-fit:fill;
         width: calc(var(--s) * 2890); height: calc(var(--s) * 1876);
         left: calc((100cqw - var(--s) * 2890) / 2); top: calc((100cqh - var(--s) * 1876) * 0.12);
+      }
+    }
+    @media (max-width: 700px) {
+      @supports (width: 1cqw) {
+        .cover-still {
+          --s: max(min(100cqw / 1926, 100cqh / 1204), 100cqh / 2354, 100cqw / 2890);
+          width: calc(var(--s) * 2890); height: calc(var(--s) * 2354);
+          left: calc((100cqw - var(--s) * 2890) / 2); top: calc((100cqh - var(--s) * 2354) * 0.12);
+        }
       }
     }
   </style>
@@ -48,7 +58,7 @@
 
 <sc-if value="{{ isCover }}" hint-placeholder-val="{{ true }}">
   <div data-screen-label="Cover" style="position:relative; height:100vh; min-height:560px; overflow:hidden; background:#1a1a1a; color:#FFFFFF; display:flex; flex-direction:column;">
-    <div style="position:absolute; inset:0; overflow:hidden; container-type:size;"><img src="{{ coverImg }}" alt=""></div>
+    <div style="position:absolute; inset:0; overflow:hidden; container-type:size;"><picture><source media="(max-width: 700px)" srcset="./assets/cover-alps-tall.jpg"><img class="cover-still" src="{{ coverImg }}" alt=""></picture></div>
     <div data-cover-anim="1" style="position:absolute; inset:0; overflow:hidden; pointer-events:none;"></div>
     <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.1) 65%, rgba(0,0,0,0.5) 100%); pointer-events:none;"></div>
     <header style="position:relative; display:flex; justify-content:center; padding:32px 40px;">
