@@ -16,7 +16,7 @@
   function dpoly(c, x) { return (3 * c[0] * x + 2 * c[1]) * x + c[2]; }
 
   function loadScene() {
-    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=13').then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    if (!scenePromise) scenePromise = fetch(BASE + 'scene.json?v=14').then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (S) { SCENE = buildLines(S); return SCENE; });
     return scenePromise;
   }
@@ -70,7 +70,7 @@
     var HE = (phone && S.HET) ? S.HET : (S.HE || S.H), EX = S.EX || 0, WE = S.WE || S.W;
     var stage = el('div', 'position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;width:' + WE + 'px;height:' + HE + 'px;');
     var imgs = [];
-    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=13', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
+    function img(src, css, w, h) { var i = el('img', ABS + (css || ''), { alt: '', src: BASE + src + '?v=14', decoding: 'async' }); if (w) { i.width = w; i.height = h; } imgs.push(i); return i; }
     // plate + drifting sky are in extended-canvas coords (photo starts at y=TOPX)
     // phones use the taller canvas so a zoomed-out frame still fills the screen with no empty edges
     stage.appendChild(img(phone ? 'cover-alps-plate-tall.jpg' : 'cover-alps-plate.jpg', '', WE, HE));
@@ -100,7 +100,11 @@
       var left = (W - WE * s) * 0.5, top = (H - HE * s) * 0.12;
       stage.style.transform = 'translate(' + left + 'px,' + top + 'px) scale(' + s + ')';
       var dpr = Math.min(3, window.devicePixelRatio || 1);
+      if (W * H * dpr * dpr > 16.7e6) dpr = Math.sqrt(16.7e6 / (W * H)); // iOS canvas-area cap
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      // phones: keep the same screen-space speed as a 1440x900 desktop (~2.24 css px/s)
+      var sDesk = Math.max(Math.min(1440 / S.W, 900 / 1204), 900 / (S.HE || S.H), 1440 / WE);
+      m.speed = (PHONE && PHONE.matches) ? (sDesk / s) : 1;
       m.view = { W: W, H: H, s: s, dpr: dpr, ox: left + (EX * s), oy: top + (TOPX * s) };
       m.sprites = null;   // re-resample for the new size
       if (m.ready || m.t0 !== undefined) frame(m, T);
@@ -108,10 +112,21 @@
     m.ro = window.ResizeObserver ? new ResizeObserver(m.layout) : null;
     if (m.ro) m.ro.observe(host); else window.addEventListener('resize', m.layout);
     m.layout(); frame(m, T);
-    Promise.all(imgs.map(function (i) { return i.decode ? i.decode() : Promise.resolve(); })).then(function () {
+    function whenDecoded(i) {
+      if (i.complete && i.naturalWidth) return Promise.resolve();
+      var wait = new Promise(function (res, rej) { i.onload = res; i.onerror = rej; });
+      return (i.decode ? i.decode().catch(function () { return i.complete && i.naturalWidth ? 1 : wait; }) : wait);
+    }
+    Promise.all(imgs.map(whenDecoded)).then(function () {
       if (mount !== m) return;
       m.ready = true; m.sprites = null; frame(m, T); wrap.style.opacity = '1'; start();
-    }, function () { teardown(); });   // any asset failure: leave the still photo
+    }, function () {
+      // still start if the essential plate loaded; otherwise leave the still photo
+      if (mount !== m) return;
+      if (imgs[0] && imgs[0].naturalWidth) {
+        m.ready = true; m.sprites = null; frame(m, T); wrap.style.opacity = '1'; start();
+      } else teardown();
+    });
     return m;
   }
 
@@ -183,7 +198,7 @@
   function tick(now) {
     raf = 0;
     if (!mount || !mount.host.isConnected) { teardown(); return; }
-    T += Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    T += Math.min(0.1, Math.max(0, (now - last) / 1000)) * (mount.speed || 1); last = now;
     frame(mount, T);
     raf = requestAnimationFrame(tick);
   }
@@ -211,6 +226,7 @@
   }
 
   document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+  window.addEventListener('pageshow', function () { if (!document.hidden) start(); });  // iOS back-forward cache
   if (PHONE && PHONE.addEventListener) PHONE.addEventListener('change', function () { teardown(); scan(); });
   var pending = false;
   new MutationObserver(function () {
@@ -220,5 +236,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan); else scan();
   window.__rcCoverSetT = function (t) { T = t; if (mount) frame(mount, T); };
   window.__rcCoverChairs = function () { return mount ? mount.chairs.filter(function (c) { return c.sx != null; }).map(function (c) { return [c.sx, c.sy, c.sk]; }) : []; };
-  window.__rcCoverAnimState = function () { return { mounted: !!mount, ready: !!(mount && mount.ready), running: !!raf, t: T }; };
+  window.__rcCoverAnimState = function () { return { mounted: !!mount, ready: !!(mount && mount.ready), running: !!raf, t: T, speed: mount && mount.speed }; };
 })();
