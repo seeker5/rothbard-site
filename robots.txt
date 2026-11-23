@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rothbardcapitalpartners.com/sitemap.xml
